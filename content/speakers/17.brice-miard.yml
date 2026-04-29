@@ -1,0 +1,12 @@
+firstname: Brice
+lastname: Miard
+photo: /speakers/brice-miard.webp
+role: Data Scientist
+company: 
+    name: Hager Group
+    link: https://hagergroup.com/fr
+    logo: /companies/hager.jpg
+talks: [12]
+socials:
+    - type: LINKEDIN
+      link: https://www.linkedin.com/in/brice-miard-6a659897/

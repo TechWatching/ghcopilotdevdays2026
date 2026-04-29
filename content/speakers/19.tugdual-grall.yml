@@ -1,0 +1,18 @@
+firstname: Tugdual
+lastname: Grall
+photo: /speakers/tugdual-grall.webp
+role: Solutions Engineer
+company: 
+    name: GitHub
+    link: https://github.com
+    logo: /companies/github.png
+talks: [13, 16]
+socials:
+    - type: GITHUB
+      link: https://github.com/tgrall
+    - type: LINKEDIN
+      link: https://www.linkedin.com/in/tugdualgrall/
+    - type: BLOG
+      link: https://tgrall.github.io/
+    - type: BLUESKY
+      link: https://bsky.app/profile/tgrall.bsky.social

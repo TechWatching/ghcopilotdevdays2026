@@ -1,0 +1,5 @@
+id: 14
+title: "Net Core Testing: pushing the limits"
+meetup: 7
+abstract: "Découvrons et libérons la puissance des tests automatisés en utilisant xUnit et les technologies associées telles que Test Containers et Benchmark Testing. Des bases aux sujets plus avancés, étape par étape, nous allons plonger dans le monde passionnant de l'asynchronicité, et comment gérer ses subtilités lorsqu'il s'agit de tests. Live coding et cas réels d'utilisation en entreprise."
+replay: https://www.youtube.com/live/ryfHYnm-7Ag?t=482s

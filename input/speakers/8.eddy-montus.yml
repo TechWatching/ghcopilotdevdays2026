@@ -1,0 +1,12 @@
+firstname: Eddy
+lastname: Montus
+photo: /speakers/eddy-montus.jpg
+role: Head of Infra & Cloud
+company: 
+    name: Hello Asso
+    link: https://www.helloasso.com/
+    logo: /companies/hello-asso.png
+talks: [5]
+socials:
+    - type: LINKEDIN
+      link: https://www.linkedin.com/in/eddymontus/

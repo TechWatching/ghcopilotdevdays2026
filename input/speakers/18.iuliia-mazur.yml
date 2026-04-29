@@ -1,0 +1,12 @@
+firstname: Iuliia
+lastname: Mazur
+photo: /speakers/iuliia-mazur.jpg
+role: Data Analyst
+company: 
+    name: Hager Group
+    link: https://hagergroup.com/fr
+    logo: /companies/hager.jpg
+talks: [12]
+socials:
+    - type: LINKEDIN
+      link: https://www.linkedin.com/in/iuliia-mazur/

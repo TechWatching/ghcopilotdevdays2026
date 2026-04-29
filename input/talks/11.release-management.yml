@@ -1,0 +1,5 @@
+id: 11
+title: Automatisation du Release Management
+meetup: 5
+abstract: "Comme je n’avais pas de Release-Manager pour gérer mes bugs et mon planning de déploiement sur Azure DevOps, je m’en suis scripté un en PowerShell."
+replay: https://www.youtube.com/live/xJxYUpHa_r0?t=4428

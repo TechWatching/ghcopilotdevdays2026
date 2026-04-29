@@ -1,0 +1,12 @@
+firstname: Guillaume
+lastname: Saint Etienne
+photo: /speakers/guillaume-saint-etienne.jpg
+role: .NET Core Tech Leader
+company: 
+    name: ITER Organization
+    link: https://www.iter.org/
+    logo: /companies/iter-org.svg
+talks: [14]
+socials:
+    - type: LINKEDIN
+      link: https://www.linkedin.com/in/guillaumese/

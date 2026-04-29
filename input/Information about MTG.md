@@ -1,0 +1,8 @@
+- Call for speakers: https://sessionize.com/mtg/
+- Meetup page : https://sessionize.com/mtg/
+- Page on La Grappe Numérique: https://www.lagrappenumerique.fr/#/mtg-bordeaux/
+- Page LinkedIn:	https://www.linkedin.com/company/mtg-bordeaux
+- Compte Bluesky:	https://bsky.app/profile/mtgbordeaux.bsky.social
+- Discord	MTG:France https://discord.gg/tsJJSwKAac
+- Membre de MTG:France: https://www.mtg-france.org/
+- Contact: bordeaux@mtg-france.org

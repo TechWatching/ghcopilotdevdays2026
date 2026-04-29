@@ -1,0 +1,12 @@
+firstname: Stéphane
+lastname: Louge 
+photo: /speakers/stephane-louge.png
+role: Group Manager
+company: 
+    name: Avanade
+    link: https://www.avanade.com/fr-fr
+    logo: /companies/avanade.png
+talks: [9]
+socials:
+    - type: LINKEDIN
+      link: https://www.linkedin.com/in/st%C3%A9phane-louge-64810218/

@@ -1,0 +1,5 @@
+id: 1
+title: Time Series Insights ? Là où on va, on n'a pas besoin de TSI mais d'Azure Data Explorer !
+meetup: 1
+abstract: Dans le cadre de ses solutions d'Energy Management et de bornes de recharges connectées, Hager collecte et présente diverses données historiques au client sur son application mobile afin de - par exemple - suivre sa consommation électrique ou encore vérifier ses coûts. Thomas, Lead Dev Backend dans l’équipe Energy de Hager Bordeaux, nous présentera la migration de ces services, initialement implémentés avec Time Series Insight vers Azure Data Explorer. Il nous expliquera les raisons et le déroulement de cette migration ainsi que leur utilisation d'Azure Data Explorer. Il conclura par une démonstration de manipulation des données avec Kusto
+replay: https://www.youtube.com/live/HRYnZMxcgUo?si=Xzea2-ziBVYHtYEJ&t=1769

@@ -1,0 +1,12 @@
+firstname: Sebastien
+lastname: Oddo
+photo: /speakers/sebastien-oddo.jpg
+role: Ingénieur tech lead frontend et Manager technique
+company: 
+    name: Ippon Technologies
+    link: https://fr.ippon.tech/
+    logo: /companies/ippon.svg
+talks: [3]
+socials:
+    - type: LINKEDIN
+      link: https://www.linkedin.com/in/s%C3%A9bastien-oddo/

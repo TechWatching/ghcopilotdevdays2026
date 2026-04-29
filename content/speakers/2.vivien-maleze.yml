@@ -1,0 +1,13 @@
+firstname: Vivien
+lastname: Maleze
+slug: vivien-maleze
+photo: /speakers/vivien-maleze.jpeg
+role: Architecte technique
+company: 
+    name: Ippon Technologies
+    link: https://fr.ippon.tech/
+    logo: /companies/ippon.svg
+talks: [2] 
+socials:
+    - type: LINKEDIN
+      link: https://www.linkedin.com/in/vivien-maleze-1635b094/

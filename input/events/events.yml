@@ -1,0 +1,95 @@
+title: List of events
+events:
+  - id: 1
+    name: Meetup n°1
+    date: 2024-02-01
+    url: https://www.meetup.com/mtg-bordeaux/events/298066350
+    location: Le Wagon Bordeaux
+    talks: [1,2]
+    partners: 
+      - name: Le Wagon Bordeaux
+        link: https://www.lewagon.com/fr
+        logo: /companies/wagon.svg
+      - name: Microsoft
+        url: https://developer.microsoft.com/
+        logo: /companies/microsoft.png
+    replay: https://www.youtube.com/live/HRYnZMxcgUo
+  - id: 2
+    name: Meetup n°2
+    date: 2024-04-04
+    url: https://www.meetup.com/mtg-bordeaux/events/298989875
+    location: Ippon Technologies Bordeaux
+    talks: [3,4,5]
+    partners: 
+      - name: Ippon Technologies
+        link: https://fr.ippon.tech/
+        logo: /companies/ippon.svg
+    replay: https://www.youtube.com/live/Okl7BmUp46M
+  - id: 3
+    name: Meetup n°3
+    date: 2024-06-11
+    url: https://www.meetup.com/mtg-bordeaux/events/300232411
+    location: Microsoft Experiences Lab Bordeaux
+    talks: [6,7]
+    partners: 
+      - name: Microsoft
+        url: https://developer.microsoft.com/
+        logo: /companies/microsoft.png
+      - name: Pulumi
+        url: https://www.pulumi.com/
+        logo: /companies/pulumi.png
+    replay: https://www.youtube.com/live/ZYIXMb4C8Dg
+  - id: 4
+    name: Meetup n°4
+    date: 2024-10-03
+    url: https://www.meetup.com/mtg-bordeaux/events/302549137
+    location: Betclic
+    talks: [8,9]
+    partners: 
+      - name: Betclic
+        link: https://www.betclic.fr/
+        logo: /companies/betclic.png
+    replay: https://www.youtube.com/live/WTA8j-vYnC0
+  - id: 5
+    name: Meetup n°5
+    date: 2025-02-06
+    url: https://www.meetup.com/mtg-bordeaux/events/305136888
+    location: SFEIR
+    talks: [10,11]
+    partners: 
+      - name: SFEIR
+        link: https://www.sfeir.com/
+        logo: /companies/sfeir.png
+    replay: https://www.youtube.com/live/WTA8j-vYnC0
+  - id: 6
+    name: Meetup n°6
+    date: 2025-04-10
+    url: https://www.meetup.com/mtg-bordeaux/events/306572236
+    location: Hager Group
+    talks: [12, 13]
+    partners:
+      - name: Hager Group
+        link: https://hagergroup.com/fr
+        logo: /companies/hager.jpg
+    replay: https://www.youtube.com/live/G4v37qVWFSI?si=m8opfK4FzUm975w8
+  - id: 7
+    name: Meetup n°7
+    date: 2025-06-03
+    url: https://www.meetup.com/mtg-bordeaux/events/307780893
+    location: Betclic
+    talks: [14, 15]
+    partners:
+      - name: Betclic
+        link: https://www.betclic.fr/
+        logo: /companies/betclic.png
+    replay: https://www.youtube.com/live/ryfHYnm-7Ag?si=CJQ2dRzcoay3bTd_
+  - id: 8
+    name: VS Code Dev Days Bordeaux (2025)
+    date: 2025-09-29
+    url: https://www.meetup.com/mtg-bordeaux/events/310407674
+    location: Microsoft Experiences Lab Bordeaux
+    talks: [16,17]
+    partners: 
+      - name: Microsoft
+        url: https://developer.microsoft.com/
+        logo: /companies/microsoft.png

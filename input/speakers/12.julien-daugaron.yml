@@ -1,0 +1,12 @@
+firstname: Julien
+lastname: Daugaron 
+photo: /speakers/julien-daugaron.png
+role: Développeur Full-stack
+company: 
+    name: Avanade
+    link: https://www.avanade.com/fr-fr
+    logo: /companies/avanade.png
+talks: [9]
+socials:
+    - type: LINKEDIN
+      link: https://www.linkedin.com/in/julien-daugaron-2bb92121a/

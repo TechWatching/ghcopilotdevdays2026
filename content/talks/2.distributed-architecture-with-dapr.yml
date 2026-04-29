@@ -1,0 +1,5 @@
+id: 2
+title: Abstraire mon architecture distribuée ? Pourquoi et comment ?
+meetup: 1
+abstract: Si on vous parle architecture distribuée, beaucoup d'entre vous diront que c'est le top. Les plus pragmatiques viendront pourtant dire que, attention, sur le papier, c'est joli, mais dans la vraie vie, c'est pas si simple. Il faut gérer les logs, la résilience des services, la connexion aux différentes couches du parc applicatif et bien d'autres choses. Et si on avait enfin une solution pour diminuer la charge cognitive des développeurs afin qu'ils puissent se recentrer sur le développement de features ?! C'est là qu'entre en jeu Dapr. Un outil que Vivien introduira à travers du live coding durant cette session.
+replay: https://www.youtube.com/live/HRYnZMxcgUo?si=Xzea2-ziBVYHtYEJ&t=4388

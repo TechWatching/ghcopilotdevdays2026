@@ -1,0 +1,13 @@
+firstname: Thomas
+lastname: Rouchaud
+slug: thomas-rouchaud
+photo: /speakers/thomas-rouchaud.png
+role: Lead Developer Backend
+company: 
+    name: Hager Group
+    link: https://hagergroup.com/fr
+    logo: /companies/hager.jpg
+talks: [1] 
+socials:
+    - type: LINKEDIN
+      link: https://www.linkedin.com/in/thomas-rouchaud-39200692/

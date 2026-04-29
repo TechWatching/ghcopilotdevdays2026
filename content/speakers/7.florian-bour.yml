@@ -1,0 +1,12 @@
+firstname: Florian
+lastname: Bour
+photo: /speakers/florian-bour.png
+role: Etudiant à l'Enseirb-Matmeca
+company:
+    name: Enseirb Matmeca
+    link: https://enseirb-matmeca.bordeaux-inp.fr/fr
+    logo: /companies/enseirb-matemca.svg
+talks: [4]
+socials:
+    - type: LINKEDIN
+      link: https://www.linkedin.com/in/fbour/

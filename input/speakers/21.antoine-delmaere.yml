@@ -1,0 +1,12 @@
+firstname: Antoine
+lastname: Delmaere
+photo: /speakers/antoine-delmaere.jpg
+role: Software Engineer
+company: 
+    name: Betclic Group
+    link: https://www.betclicgroup.com/
+    logo: /companies/betclic.png
+talks: [15]
+socials:
+    - type: LINKEDIN
+      link: https://www.linkedin.com/in/antoine-delmaere/

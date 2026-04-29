@@ -1,0 +1,12 @@
+firstname: Guillaume
+lastname: Lannebere 
+photo: /speakers/guillaume-lannebere.jpeg
+role: Head Of Cloud Center Of Excellence
+company: 
+    name: Betclic
+    link: https://www.betclic.fr/
+    logo: /companies/betclic.png
+talks: [8]
+socials:
+    - type: LINKEDIN
+      link: https://www.linkedin.com/in/guillaume-lannebere-51a17183/

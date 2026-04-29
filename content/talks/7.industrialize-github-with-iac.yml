@@ -1,0 +1,5 @@
+id: 7
+title: Industrialiser la configuration de ses dépôts GitHub avec de l'IaC
+meetup: 3
+abstract: "Pour votre infrastructure cloud, vous ne vous posez pas la question : c'est Infrastructure as Code obligatoire! Mais avez-vous déjà pensé à utiliser aussi l'IaC pour initialiser et configurer vos dépôts GitHub? C'est ce que l'on verra dans ce live coding d'un dépôt GitHub et de son pipeline préconfiguré pour déployer dans Azure via OpenID Connect"
+replay: https://www.youtube.com/live/ZYIXMb4C8Dg?si=9ZwBANTwdXSgWFBX&t=4056

@@ -1,0 +1,18 @@
+firstname: Engin
+lastname: Diri
+photo: /speakers/engin-diri.png
+role: Customer Experience Architect
+company: 
+    name: Pulumi
+    link: https://www.pulumi.com/
+    logo: /companies/pulumi.svg
+talks: [6] 
+socials:
+    - type: GITHUB
+      link: https://github.com/dirien
+    - type: BLOG
+      link: https://blog.ediri.io/
+    - type: LINKEDIN
+      link: https://www.linkedin.com/in/engin-diri/
+    - type: BLUESKY
+      link: https://bsky.app/profile/ediri.de
