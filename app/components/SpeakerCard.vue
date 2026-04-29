@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { socialIcon, normalizeLogo } from '~/utils/format'
+import { socialIcon, isWhiteLogo } from '~/utils/format'
 
 defineProps<{
   speaker: {
@@ -7,16 +7,36 @@ defineProps<{
     lastname: string
     photo?: string
     role?: string
-    company?: { name: string, link?: string, url?: string, logo?: string }
+    company?: { name: string, link?: string, logo?: string } | null
     socials?: { type: string, link: string }[]
   }
 }>()
 </script>
 
 <template>
-  <UCard class="h-full">
+  <UCard
+    class="h-full relative"
+    :ui="{ body: 'p-0 sm:p-0' }"
+  >
+    <a
+      v-if="speaker.company?.logo"
+      :href="speaker.company.link || undefined"
+      :target="speaker.company.link ? '_blank' : undefined"
+      :rel="speaker.company.link ? 'noopener' : undefined"
+      :title="speaker.company.name"
+      :aria-label="speaker.company.name"
+      class="absolute top-3 right-3 z-10 w-12 h-12 rounded-md p-1.5 shadow-sm ring-1 ring-black/5 flex items-center justify-center"
+      :class="isWhiteLogo(speaker.company.logo) ? 'bg-gray-900' : 'bg-white dark:bg-gray-100'"
+    >
+      <img
+        :src="speaker.company.logo"
+        :alt="speaker.company.name"
+        class="max-w-full max-h-full object-contain"
+      >
+    </a>
+
     <template #header>
-      <div class="flex items-center gap-4">
+      <div class="flex items-center gap-4 pr-14">
         <UAvatar
           :src="speaker.photo"
           :alt="`${speaker.firstname} ${speaker.lastname}`"
@@ -28,25 +48,6 @@ defineProps<{
         </div>
       </div>
     </template>
-
-    <div v-if="speaker.company" class="flex items-center gap-2 text-sm">
-      <img
-        v-if="speaker.company.logo"
-        :src="normalizeLogo(speaker.company.logo)"
-        :alt="speaker.company.name"
-        class="w-6 h-6 object-contain rounded bg-white p-0.5"
-      >
-      <a
-        v-if="speaker.company.link || speaker.company.url"
-        :href="speaker.company.link || speaker.company.url"
-        target="_blank"
-        rel="noopener"
-        class="hover:underline"
-      >
-        {{ speaker.company.name }}
-      </a>
-      <span v-else>{{ speaker.company.name }}</span>
-    </div>
 
     <template v-if="speaker.socials?.length" #footer>
       <div class="flex flex-wrap gap-1">

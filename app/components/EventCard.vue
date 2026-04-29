@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { formatDateFr, normalizeLogo } from '~/utils/format'
+import { formatDateFr, isWhiteLogo } from '~/utils/format'
 
 defineProps<{
   event: {
@@ -53,9 +53,10 @@ defineProps<{
       >
         <img
           v-if="p.logo"
-          :src="normalizeLogo(p.logo)"
+          :src="p.logo"
           :alt="p.name"
-          class="h-8 w-auto object-contain bg-white rounded p-1"
+          class="h-8 w-auto object-contain rounded p-1"
+          :class="isWhiteLogo(p.logo) ? 'bg-gray-900' : 'bg-white dark:bg-gray-100'"
         >
         <span v-else>{{ p.name }}</span>
       </a>

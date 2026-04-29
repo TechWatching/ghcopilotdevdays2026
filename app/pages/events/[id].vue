@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { formatDateFr, normalizeLogo } from '~/utils/format'
+import { formatDateFr } from '~/utils/format'
 
 const route = useRoute()
 const id = Number(route.params.id)

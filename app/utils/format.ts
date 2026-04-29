@@ -1,12 +1,15 @@
-const LOGO_FIXES: Record<string, string> = {
-  '/companies/pulumi.png': '/companies/pulumi.svg',
-  '/companies/sfeir.png': '/companies/sfeir.svg',
-  '/companies/avanade.png': '/companies/Avanade.png'
-}
+// Logos that are white (or near-white) on transparent and need a dark backdrop to be visible.
+const WHITE_LOGOS = new Set<string>([
+  '/companies/sfeir.svg',
+  '/companies/pulumi.svg',
+  '/companies/enseirb-matemca.svg',
+  '/companies/github.png',
+  '/companies/hello-asso.png'
+])
 
-export function normalizeLogo(path?: string): string | undefined {
-  if (!path) return path
-  return LOGO_FIXES[path] ?? path
+export function isWhiteLogo(path?: string): boolean {
+  if (!path) return false
+  return WHITE_LOGOS.has(path)
 }
 
 export function socialIcon(type: string): string {

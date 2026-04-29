@@ -37,7 +37,7 @@ events:
         logo: /companies/microsoft.png
       - name: Pulumi
         url: https://www.pulumi.com/
-        logo: /companies/pulumi.png
+        logo: /companies/pulumi.svg
     replay: https://www.youtube.com/live/ZYIXMb4C8Dg
   - id: 4
     name: Meetup n°4
@@ -59,7 +59,7 @@ events:
     partners: 
       - name: SFEIR
         link: https://www.sfeir.com/
-        logo: /companies/sfeir.png
+        logo: /companies/sfeir.svg
     replay: https://www.youtube.com/live/WTA8j-vYnC0
   - id: 6
     name: Meetup n°6

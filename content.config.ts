@@ -12,9 +12,16 @@ export default defineContentConfig({
         lastname: z.string(),
         photo: z.string().optional(),
         role: z.string().optional(),
-        company: z.any().optional(),
+        company: z.object({
+          name: z.string(),
+          link: z.string().optional(),
+          logo: z.string().optional()
+        }).optional(),
         talks: z.array(z.coerce.number()).default([]),
-        socials: z.array(z.any()).default([])
+        socials: z.array(z.object({
+          type: z.string(),
+          link: z.string()
+        })).default([])
       })
     }),
     talks: defineCollection({
