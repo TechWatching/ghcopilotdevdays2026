@@ -1,7 +1,7 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
 
-:root, :host {
+:root {
   --color-bordeaux-50: #fdf2f4;
   --color-bordeaux-100: #fbe6ea;
   --color-bordeaux-200: #f8cfd6;
