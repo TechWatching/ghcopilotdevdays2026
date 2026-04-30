@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { formatDateFr } from '~/utils/format'
+import { formatDateFr, talkNumericId } from '~/utils/format'
 
 const route = useRoute()
 const id = Number(route.params.id)
@@ -11,11 +11,6 @@ const [{ data: meetupsDoc }, { data: allTalks }, { data: allSpeakers }] = await 
 ])
 
 const event = computed(() => meetupsDoc.value?.events?.find((e: any) => e.id === id))
-
-function talkNumericId(t: any): number {
-  const stem = String(t?.stem ?? '').split('/').pop() ?? ''
-  return Number.parseInt(stem.split('.')[0] ?? '', 10)
-}
 
 const talks = computed(() => {
   if (!event.value) return []

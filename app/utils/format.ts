@@ -34,6 +34,21 @@ export function socialIcon(type: string): string {
   }
 }
 
+export function talkNumericId(t: any): number {
+  const stem = String(t?.stem ?? '').split('/').pop() ?? ''
+  return Number.parseInt(stem.split('.')[0] ?? '', 10)
+}
+
+// Speakers are stored in `content/speakers/<n>.<slug>.yml`. The leading number
+// is the speaker id; the rest is the URL-safe slug. We prefer an explicit
+// `slug` field in the YAML when present, otherwise derive it from the stem.
+export function speakerSlug(s: any): string {
+  if (s?.slug) return String(s.slug)
+  const stem = String(s?.stem ?? '').split('/').pop() ?? ''
+  const dot = stem.indexOf('.')
+  return dot >= 0 ? stem.slice(dot + 1) : stem
+}
+
 export function formatDateFr(date: string | Date): string {
   const d = typeof date === 'string' ? new Date(date) : date
   if (Number.isNaN(d.getTime())) return String(date)

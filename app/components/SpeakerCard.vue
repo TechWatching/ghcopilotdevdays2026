@@ -1,23 +1,33 @@
 <script setup lang="ts">
-import { socialIcon, isWhiteLogo } from '~/utils/format'
+import { socialIcon, isWhiteLogo, speakerSlug } from '~/utils/format'
 
-defineProps<{
+const props = defineProps<{
   speaker: {
     firstname: string
     lastname: string
+    slug?: string
+    stem?: string
     photo?: string
     role?: string
     company?: { name: string, link?: string, logo?: string } | null
     socials?: { type: string, link: string }[]
   }
 }>()
+
+const slug = computed(() => speakerSlug(props.speaker))
 </script>
 
 <template>
   <UCard
-    class="h-full relative"
+    class="h-full relative transition hover:ring-1 hover:ring-primary/40"
     :ui="{ body: 'p-0 sm:p-0' }"
   >
+    <NuxtLink
+      v-if="slug"
+      :to="`/speakers/${slug}`"
+      :aria-label="`${speaker.firstname} ${speaker.lastname}`"
+      class="absolute inset-0 z-0"
+    />
     <a
       v-if="speaker.company?.logo"
       :href="speaker.company.link || undefined"
@@ -36,7 +46,7 @@ defineProps<{
     </a>
 
     <template #header>
-      <div class="flex items-center gap-4 pr-14">
+      <div class="flex items-center gap-4 pr-14 relative z-[1]">
         <UAvatar
           :src="speaker.photo"
           :alt="`${speaker.firstname} ${speaker.lastname}`"
@@ -50,7 +60,7 @@ defineProps<{
     </template>
 
     <template v-if="speaker.socials?.length" #footer>
-      <div class="flex flex-wrap gap-1">
+      <div class="flex flex-wrap gap-1 relative z-10">
         <UButton
           v-for="s in speaker.socials"
           :key="s.link"
