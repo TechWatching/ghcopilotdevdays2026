@@ -12,6 +12,12 @@ export function isWhiteLogo(path?: string): boolean {
   return WHITE_LOGOS.has(path)
 }
 
+export function normalizeLogo(path?: string): string {
+  if (!path) return ''
+  if (/^(https?:)?\/\//.test(path)) return path
+  return path.startsWith('/') ? path : `/${path}`
+}
+
 export function socialIcon(type: string): string {
   const t = type.toUpperCase()
   switch (t) {
