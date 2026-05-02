@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { normalizeLogo } from '~/utils/format'
-defineProps<{
+import { isWhiteLogo, normalizeLogo } from '~/utils/format'
+const props = defineProps<{
   partner: { name: string, link?: string, url?: string, logo?: string }
 }>()
+const needsDarkBg = computed(() => isWhiteLogo(props.partner.logo))
 </script>
 
 <template>
@@ -11,7 +12,8 @@ defineProps<{
     target="_blank"
     rel="noopener"
     :title="partner.name"
-    class="inline-flex items-center justify-center bg-white rounded p-2 h-14 w-32 hover:scale-105 transition-transform"
+    class="inline-flex items-center justify-center rounded p-2 h-14 w-32 hover:scale-105 transition-transform"
+    :class="needsDarkBg ? 'bg-gray-900' : 'bg-white'"
   >
     <img
       v-if="partner.logo"

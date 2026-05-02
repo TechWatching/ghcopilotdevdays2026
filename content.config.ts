@@ -10,6 +10,7 @@ export default defineContentConfig({
       schema: z.object({
         firstname: z.string(),
         lastname: z.string(),
+        slug: z.string().optional(),
         photo: z.string().optional(),
         role: z.string().optional(),
         company: z.object({
