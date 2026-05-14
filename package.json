@@ -10,25 +10,17 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "@iconify-json/lucide": "^1.2.104",
-    "@iconify-json/simple-icons": "^1.2.80",
+    "@iconify-json/lucide": "^1.2.107",
+    "@iconify-json/simple-icons": "^1.2.82",
     "@nuxt/content": "^3.13.0",
     "@nuxt/ui": "^4.7.1",
-    "nuxt": "^4.4.2",
-    "vue": "^3.5.33",
-    "vue-router": "^5.0.6"
+    "nuxt": "^4.4.5",
+    "vue": "^3.5.34",
+    "vue-router": "^5.0.7"
   },
-  "packageManager": "pnpm@10.30.3",
+  "packageManager": "pnpm@11.1.2",
   "devDependencies": {
-    "better-sqlite3": "^12.9.0",
-    "tailwindcss": "^4.2.4"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "better-sqlite3",
-      "esbuild",
-      "@parcel/watcher",
-      "vue-demi"
-    ]
+    "better-sqlite3": "^12.10.0",
+    "tailwindcss": "^4.3.0"
   }
 }
