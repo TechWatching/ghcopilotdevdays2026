@@ -1,11 +1,13 @@
 <script setup lang="ts">
-const links = [
+const { t } = useI18n()
+
+const links = computed(() => [
   [
-    { label: 'Accueil', to: '/', icon: 'i-lucide-home' },
-    { label: 'Speakers', to: '/speakers', icon: 'i-lucide-users' },
-    { label: 'Événements', to: '/events', icon: 'i-lucide-calendar' }
+    { label: t('nav.home'), to: '/', icon: 'i-lucide-home' },
+    { label: t('nav.speakers'), to: '/speakers', icon: 'i-lucide-users' },
+    { label: t('nav.events'), to: '/events', icon: 'i-lucide-calendar' }
   ]
-]
+])
 </script>
 
 <template>
@@ -26,7 +28,7 @@ const links = [
           variant="solid"
           class="hidden sm:inline-flex"
         >
-          Call for speakers
+          {{ t('nav.callForSpeakers') }}
         </UButton>
       </div>
     </UContainer>

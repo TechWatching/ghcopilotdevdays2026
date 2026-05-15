@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { formatDateFr } from '~/utils/format'
 
+const { t } = useI18n()
 const route = useRoute()
 const id = Number(route.params.id)
 
@@ -21,7 +22,6 @@ const talks = computed(() => {
   if (!event.value) return []
   const orderedIds: number[] = event.value.talks ?? []
   const forMeetup = (allTalks.value ?? []).filter((t: any) => t.meetup === id)
-  // Order by the YAML `talks: [..]` sequence in events.yml when possible.
   return forMeetup.sort((a: any, b: any) => {
     const ia = orderedIds.indexOf(talkNumericId(a))
     const ib = orderedIds.indexOf(talkNumericId(b))
@@ -34,11 +34,11 @@ function speakersOf(talkId: number) {
 }
 
 if (!event.value) {
-  throw createError({ statusCode: 404, statusMessage: 'Événement introuvable', fatal: true })
+  throw createError({ statusCode: 404, statusMessage: t('error.notFound'), fatal: true })
 }
 
 useSeoMeta({
-  title: () => event.value ? `${event.value.name} — MTG Bordeaux` : 'Événement — MTG Bordeaux'
+  title: () => event.value ? `${event.value.name} — MTG Bordeaux` : t('seo.events')
 })
 </script>
 
@@ -47,7 +47,7 @@ useSeoMeta({
     <section class="border-b border-default bg-elevated/30">
       <UContainer class="py-12">
         <UButton to="/events" icon="i-lucide-arrow-left" variant="ghost" color="neutral" size="sm" class="mb-4">
-          Retour aux événements
+          {{ t('events.backToEvents') }}
         </UButton>
         <h1 class="text-3xl md:text-4xl font-bold">{{ event.name }}</h1>
         <div class="mt-3 flex flex-wrap gap-4 text-muted">
@@ -61,15 +61,15 @@ useSeoMeta({
 
         <div class="mt-6 flex flex-wrap gap-2">
           <UButton v-if="event.replay" :to="event.replay" target="_blank" icon="i-lucide-play" color="primary">
-            Voir le replay
+            {{ t('events.seeReplay') }}
           </UButton>
           <UButton v-if="event.url" :to="event.url" target="_blank" icon="i-simple-icons-meetup" variant="outline" color="neutral">
-            Page Meetup
+            {{ t('events.meetupPage') }}
           </UButton>
         </div>
 
         <div v-if="event.partners?.length" class="mt-8">
-          <h2 class="text-sm font-semibold text-muted mb-2">Partenaires</h2>
+          <h2 class="text-sm font-semibold text-muted mb-2">{{ t('events.partners') }}</h2>
           <div class="flex flex-wrap gap-3">
             <PartnerLogo v-for="p in event.partners" :key="p.name" :partner="p" />
           </div>
@@ -78,16 +78,16 @@ useSeoMeta({
     </section>
 
     <UContainer class="py-10">
-      <h2 class="text-2xl font-bold mb-6">Talks ({{ talks.length }})</h2>
+      <h2 class="text-2xl font-bold mb-6">{{ t('events.talks') }} ({{ talks.length }})</h2>
       <div v-if="talks.length" class="grid gap-6 lg:grid-cols-2">
         <TalkItem
-          v-for="t in talks"
-          :key="talkNumericId(t)"
-          :talk="t"
-          :speakers="speakersOf(talkNumericId(t))"
+          v-for="talk in talks"
+          :key="talkNumericId(talk)"
+          :talk="talk"
+          :speakers="speakersOf(talkNumericId(talk))"
         />
       </div>
-      <p v-else class="text-muted">Aucun talk renseigné pour cet événement.</p>
+      <p v-else class="text-muted">{{ t('events.noTalks') }}</p>
     </UContainer>
   </div>
 </template>

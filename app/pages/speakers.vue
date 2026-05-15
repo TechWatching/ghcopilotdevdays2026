@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const { t } = useI18n()
+
 const { data: speakers } = await useAsyncData('speakers-list', () =>
   queryCollection('speakers').all()
 )
@@ -7,18 +9,18 @@ const sorted = computed(() =>
   [...(speakers.value ?? [])].sort((a, b) => a.lastname.localeCompare(b.lastname, 'fr'))
 )
 
-useSeoMeta({ title: 'Speakers — MTG Bordeaux' })
+useSeoMeta({ title: t('seo.speakers') })
 </script>
 
 <template>
   <div>
     <section class="border-b border-default">
       <UContainer class="py-12">
-        <h1 class="text-3xl md:text-4xl font-bold">Speakers</h1>
+        <h1 class="text-3xl md:text-4xl font-bold">{{ t('speakers.title') }}</h1>
         <p class="mt-2 text-muted">
-          Les intervenant·e·s qui ont partagé leur expertise lors des meetups MTG Bordeaux.
+          {{ t('speakers.description') }}
         </p>
-        <UBadge class="mt-4" color="primary" variant="subtle">{{ sorted.length }} speakers</UBadge>
+        <UBadge class="mt-4" color="primary" variant="subtle">{{ sorted.length }} {{ t('speakers.badge') }}</UBadge>
       </UContainer>
     </section>
 

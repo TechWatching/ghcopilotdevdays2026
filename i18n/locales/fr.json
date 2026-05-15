@@ -1,0 +1,76 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "speakers": "Speakers",
+    "events": "Événements",
+    "callForSpeakers": "Call for speakers"
+  },
+  "footer": {
+    "title": "Microsoft Tech Group : Bordeaux",
+    "description": "Communauté technique bordelaise autour des technologies Microsoft. Membre de MTG:France.",
+    "links": "Liens",
+    "contact": "Contact",
+    "copyright": "© {year} MTG Bordeaux",
+    "builtWith": "Built with Nuxt & Nuxt UI"
+  },
+  "home": {
+    "hero": {
+      "badge": "Microsoft Tech Group",
+      "description": "La communauté bordelaise autour des technologies Microsoft. Meetups, talks et échanges entre passionné·e·s du Cloud, du développement et de l'écosystème Microsoft.",
+      "seeEvents": "Voir les événements",
+      "discoverSpeakers": "Découvrir les speakers",
+      "proposeATalk": "Proposer un talk"
+    },
+    "about": {
+      "title": "À propos du groupe",
+      "description1": "Le {strong} est un groupe d'utilisateurs basé à Bordeaux, dédié aux technologies Microsoft : Azure, .NET, GitHub, développeurs et IA. Nous organisons régulièrement des meetups gratuits avec des talks de la communauté, des replays accessibles à tous et des échanges autour des partenaires de l'écosystème.",
+      "description2": "Le MTG Bordeaux est membre de {link}, le réseau national des Microsoft Tech Groups.",
+      "joinAndFollow": "Rejoindre & suivre"
+    },
+    "latestEvents": {
+      "title": "Derniers événements",
+      "description": "Les meetups les plus récents organisés à Bordeaux.",
+      "seeAll": "Tout voir"
+    },
+    "partners": {
+      "title": "Nos partenaires",
+      "description": "Merci aux entreprises qui nous accueillent et nous soutiennent."
+    }
+  },
+  "events": {
+    "title": "Événements",
+    "description": "Tous les meetups organisés par le MTG Bordeaux, du plus récent au plus ancien.",
+    "badge": "meetups",
+    "backToEvents": "Retour aux événements",
+    "partners": "Partenaires",
+    "seeReplay": "Voir le replay",
+    "meetupPage": "Page Meetup",
+    "talks": "Talks",
+    "noTalks": "Aucun talk renseigné pour cet événement.",
+    "card": {
+      "partners": "Partenaires :",
+      "seeDetail": "Voir le détail",
+      "replay": "Replay",
+      "meetup": "Meetup"
+    }
+  },
+  "speakers": {
+    "title": "Speakers",
+    "description": "Les intervenant·e·s qui ont partagé leur expertise lors des meetups MTG Bordeaux.",
+    "badge": "speakers"
+  },
+  "seo": {
+    "title": "MTG Bordeaux — Microsoft Tech Group",
+    "description": "Communauté technique bordelaise autour des technologies Microsoft. Meetups, talks, replays.",
+    "ogTitle": "MTG Bordeaux",
+    "ogDescription": "Communauté technique bordelaise autour des technologies Microsoft.",
+    "events": "Événements — MTG Bordeaux",
+    "speakers": "Speakers — MTG Bordeaux",
+    "error": "Erreur — MTG Bordeaux"
+  },
+  "error": {
+    "defaultMessage": "Une erreur est survenue.",
+    "backHome": "Retour à l'accueil",
+    "notFound": "Événement introuvable"
+  }
+}

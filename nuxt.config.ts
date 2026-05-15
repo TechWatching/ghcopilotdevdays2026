@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
   compatibilityDate: '2025-01-01',
   devtools: { enabled: true },
-  modules: ['@nuxt/ui', '@nuxt/content'],
+  modules: ['@nuxt/ui', '@nuxt/content', '@nuxtjs/i18n'],
   css: ['~/assets/css/main.css'],
   ssr: true,
   nitro: {
@@ -16,5 +16,17 @@ export default defineNuxtConfig({
   },
   ui: {
     colorMode: true
+  },
+  i18n: {
+    defaultLocale: 'fr',
+    locales: [
+      {
+        code: 'fr',
+        language: 'fr-FR',
+        name: 'Français',
+        file: 'fr.json'
+      }
+    ],
+    langDir: 'locales'
   }
 })

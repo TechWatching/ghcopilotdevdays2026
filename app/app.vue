@@ -11,11 +11,13 @@
 </template>
 
 <script setup lang="ts">
+const { t } = useI18n()
+
 useSeoMeta({
-  title: 'MTG Bordeaux — Microsoft Tech Group',
-  description: 'Communauté technique bordelaise autour des technologies Microsoft. Meetups, talks, replays.',
-  ogTitle: 'MTG Bordeaux',
-  ogDescription: 'Communauté technique bordelaise autour des technologies Microsoft.',
+  title: t('seo.title'),
+  description: t('seo.description'),
+  ogTitle: t('seo.ogTitle'),
+  ogDescription: t('seo.ogDescription'),
   ogImage: '/social-card.png',
   twitterCard: 'summary_large_image'
 })

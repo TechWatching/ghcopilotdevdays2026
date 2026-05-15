@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const { t } = useI18n()
+
 const { data: meetupsDoc } = await useAsyncData('home-events', () =>
   queryCollection('meetups').first()
 )
@@ -39,20 +41,19 @@ const communityLinks = [
       <div class="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-primary/5 pointer-events-none" />
       <UContainer class="py-20 md:py-28 relative">
         <div class="max-w-3xl">
-          <UBadge color="primary" variant="subtle" class="mb-4">Microsoft Tech Group</UBadge>
+          <UBadge color="primary" variant="subtle" class="mb-4">{{ t('home.hero.badge') }}</UBadge>
           <h1 class="text-4xl md:text-6xl font-bold tracking-tight">
             MTG <span class="text-primary">Bordeaux</span>
           </h1>
           <p class="mt-4 text-lg md:text-xl text-muted">
-            La communauté bordelaise autour des technologies Microsoft. Meetups, talks et échanges
-            entre passionné·e·s du Cloud, du développement et de l'écosystème Microsoft.
+            {{ t('home.hero.description') }}
           </p>
           <div class="mt-8 flex flex-wrap gap-3">
             <UButton to="/events" icon="i-lucide-calendar" size="lg" color="primary">
-              Voir les événements
+              {{ t('home.hero.seeEvents') }}
             </UButton>
             <UButton to="/speakers" icon="i-lucide-users" size="lg" variant="outline" color="neutral">
-              Découvrir les speakers
+              {{ t('home.hero.discoverSpeakers') }}
             </UButton>
             <UButton
               to="https://sessionize.com/mtg/"
@@ -62,7 +63,7 @@ const communityLinks = [
               variant="ghost"
               color="neutral"
             >
-              Proposer un talk
+              {{ t('home.hero.proposeATalk') }}
             </UButton>
           </div>
         </div>
@@ -73,23 +74,22 @@ const communityLinks = [
     <section class="py-16">
       <UContainer class="grid gap-10 md:grid-cols-3">
         <div class="md:col-span-2 space-y-4">
-          <h2 class="text-2xl md:text-3xl font-bold">À propos du groupe</h2>
-          <p class="text-muted">
-            Le <strong>Microsoft Tech Group: Bordeaux</strong> est un groupe d'utilisateurs basé à Bordeaux,
-            dédié aux technologies Microsoft : Azure, .NET, GitHub, développeurs et IA. Nous organisons
-            régulièrement des meetups gratuits avec des talks de la communauté, des replays accessibles
-            à tous et des échanges autour des partenaires de l'écosystème.
-          </p>
-          <p class="text-muted">
-            Le MTG Bordeaux est membre de
-            <a href="https://www.mtg-france.org/" target="_blank" rel="noopener" class="text-primary hover:underline">MTG:France</a>,
-            le réseau national des Microsoft Tech Groups.
-          </p>
+          <h2 class="text-2xl md:text-3xl font-bold">{{ t('home.about.title') }}</h2>
+          <i18n-t keypath="home.about.description1" tag="p" class="text-muted">
+            <template #strong>
+              <strong>Microsoft Tech Group: Bordeaux</strong>
+            </template>
+          </i18n-t>
+          <i18n-t keypath="home.about.description2" tag="p" class="text-muted">
+            <template #link>
+              <a href="https://www.mtg-france.org/" target="_blank" rel="noopener" class="text-primary hover:underline">MTG:France</a>
+            </template>
+          </i18n-t>
         </div>
         <UCard>
           <template #header>
             <h3 class="font-semibold flex items-center gap-2">
-              <UIcon name="i-lucide-link" /> Rejoindre &amp; suivre
+              <UIcon name="i-lucide-link" /> {{ t('home.about.joinAndFollow') }}
             </h3>
           </template>
           <ul class="space-y-1.5 text-sm">
@@ -115,11 +115,11 @@ const communityLinks = [
       <UContainer>
         <div class="flex items-end justify-between mb-8">
           <div>
-            <h2 class="text-2xl md:text-3xl font-bold">Derniers événements</h2>
-            <p class="text-muted">Les meetups les plus récents organisés à Bordeaux.</p>
+            <h2 class="text-2xl md:text-3xl font-bold">{{ t('home.latestEvents.title') }}</h2>
+            <p class="text-muted">{{ t('home.latestEvents.description') }}</p>
           </div>
           <UButton to="/events" icon="i-lucide-arrow-right" trailing variant="ghost" color="neutral">
-            Tout voir
+            {{ t('home.latestEvents.seeAll') }}
           </UButton>
         </div>
         <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -131,8 +131,8 @@ const communityLinks = [
     <!-- Partners -->
     <section v-if="allPartners.length" class="py-16">
       <UContainer>
-        <h2 class="text-2xl md:text-3xl font-bold mb-2">Nos partenaires</h2>
-        <p class="text-muted mb-8">Merci aux entreprises qui nous accueillent et nous soutiennent.</p>
+        <h2 class="text-2xl md:text-3xl font-bold mb-2">{{ t('home.partners.title') }}</h2>
+        <p class="text-muted mb-8">{{ t('home.partners.description') }}</p>
         <div class="flex flex-wrap gap-4">
           <PartnerLogo v-for="p in allPartners" :key="p.name" :partner="p" />
         </div>

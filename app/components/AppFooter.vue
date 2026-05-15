@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const { t } = useI18n()
+
 const communityLinks = [
   { label: 'Call for speakers', to: 'https://sessionize.com/mtg/', icon: 'i-lucide-mic' },
   { label: 'Meetup', to: 'https://www.meetup.com/mtg-bordeaux/', icon: 'i-simple-icons-meetup' },
@@ -14,13 +16,13 @@ const communityLinks = [
   <footer class="border-t border-default mt-16">
     <UContainer class="py-10 grid gap-8 md:grid-cols-3">
       <div>
-        <h3 class="font-semibold mb-2">Microsoft Tech Group: Bordeaux</h3>
+        <h3 class="font-semibold mb-2">{{ t('footer.title') }}</h3>
         <p class="text-sm text-muted">
-          Communauté technique bordelaise autour des technologies Microsoft. Membre de MTG:France.
+          {{ t('footer.description') }}
         </p>
       </div>
       <div>
-        <h3 class="font-semibold mb-2">Liens</h3>
+        <h3 class="font-semibold mb-2">{{ t('footer.links') }}</h3>
         <ul class="space-y-1 text-sm">
           <li v-for="l in communityLinks" :key="l.label">
             <UButton
@@ -38,7 +40,7 @@ const communityLinks = [
         </ul>
       </div>
       <div>
-        <h3 class="font-semibold mb-2">Contact</h3>
+        <h3 class="font-semibold mb-2">{{ t('footer.contact') }}</h3>
         <UButton
           to="mailto:bordeaux@mtg-france.org"
           icon="i-lucide-mail"
@@ -51,8 +53,8 @@ const communityLinks = [
       </div>
     </UContainer>
     <UContainer class="py-4 border-t border-default text-xs text-muted flex justify-between">
-      <span>© {{ new Date().getFullYear() }} MTG Bordeaux</span>
-      <span>Built with Nuxt &amp; Nuxt UI</span>
+      <span>{{ t('footer.copyright', { year: new Date().getFullYear() }) }}</span>
+      <span>{{ t('footer.builtWith') }}</span>
     </UContainer>
   </footer>
 </template>

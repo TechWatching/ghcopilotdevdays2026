@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { formatDateFr, isWhiteLogo } from '~/utils/format'
 
+const { t } = useI18n()
+
 defineProps<{
   event: {
     id: number
@@ -41,7 +43,7 @@ defineProps<{
     </template>
 
     <div v-if="event.partners?.length" class="flex flex-wrap items-center gap-3">
-      <span class="text-xs text-muted">Partenaires :</span>
+      <span class="text-xs text-muted">{{ t('events.card.partners') }}</span>
       <a
         v-for="p in event.partners"
         :key="p.name"
@@ -65,13 +67,13 @@ defineProps<{
     <template #footer>
       <div class="flex flex-wrap gap-2">
         <UButton :to="`/events/${event.id}`" icon="i-lucide-arrow-right" trailing color="primary" variant="solid" size="sm">
-          Voir le détail
+          {{ t('events.card.seeDetail') }}
         </UButton>
         <UButton v-if="event.replay" :to="event.replay" target="_blank" icon="i-lucide-play" variant="outline" color="neutral" size="sm">
-          Replay
+          {{ t('events.card.replay') }}
         </UButton>
         <UButton v-if="event.url" :to="event.url" target="_blank" icon="i-simple-icons-meetup" variant="ghost" color="neutral" size="sm">
-          Meetup
+          {{ t('events.card.meetup') }}
         </UButton>
       </div>
     </template>
