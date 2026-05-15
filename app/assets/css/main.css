@@ -1,2 +1,16 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
+
+:root {
+  --color-bordeaux-50: #fdf2f4;
+  --color-bordeaux-100: #fbe6ea;
+  --color-bordeaux-200: #f8cfd6;
+  --color-bordeaux-300: #f3aab6;
+  --color-bordeaux-400: #eb7589;
+  --color-bordeaux-500: #df3f58;
+  --color-bordeaux-600: #cc2243;
+  --color-bordeaux-700: #ab1535;
+  --color-bordeaux-800: #8f152f;
+  --color-bordeaux-900: #7b162d;
+  --color-bordeaux-950: #430714;
+}
