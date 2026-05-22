@@ -2,13 +2,13 @@
 const { t } = useI18n()
 
 const communityLinks = [
-  { label: 'Call for speakers', to: 'https://sessionize.com/mtg/', icon: 'i-lucide-mic' },
-  { label: 'Meetup', to: 'https://www.meetup.com/mtg-bordeaux/', icon: 'i-simple-icons-meetup' },
-  { label: 'La Grappe Numérique', to: 'https://www.lagrappenumerique.fr/#/mtg-bordeaux/', icon: 'i-lucide-grape' },
-  { label: 'LinkedIn', to: 'https://www.linkedin.com/company/mtg-bordeaux', icon: 'i-simple-icons-linkedin' },
-  { label: 'Bluesky', to: 'https://bsky.app/profile/mtgbordeaux.bsky.social', icon: 'i-simple-icons-bluesky' },
-  { label: 'Discord MTG:France', to: 'https://discord.gg/tsJJSwKAac', icon: 'i-simple-icons-discord' },
-  { label: 'MTG:France', to: 'https://www.mtg-france.org/', icon: 'i-lucide-globe' }
+  { id: 'call-for-speakers', labelKey: 'nav.callForSpeakers', to: 'https://sessionize.com/mtg/', icon: 'i-lucide-mic' },
+  { id: 'meetup', label: 'Meetup', to: 'https://www.meetup.com/mtg-bordeaux/', icon: 'i-simple-icons-meetup' },
+  { id: 'la-grappe-numerique', label: 'La Grappe Numérique', to: 'https://www.lagrappenumerique.fr/#/mtg-bordeaux/', icon: 'i-lucide-grape' },
+  { id: 'linkedin', label: 'LinkedIn', to: 'https://www.linkedin.com/company/mtg-bordeaux', icon: 'i-simple-icons-linkedin' },
+  { id: 'bluesky', label: 'Bluesky', to: 'https://bsky.app/profile/mtgbordeaux.bsky.social', icon: 'i-simple-icons-bluesky' },
+  { id: 'discord-mtg-france', label: 'Discord MTG:France', to: 'https://discord.gg/tsJJSwKAac', icon: 'i-simple-icons-discord' },
+  { id: 'mtg-france', label: 'MTG:France', to: 'https://www.mtg-france.org/', icon: 'i-lucide-globe' }
 ]
 </script>
 
@@ -24,7 +24,7 @@ const communityLinks = [
       <div>
         <h3 class="font-semibold mb-2">{{ t('footer.links') }}</h3>
         <ul class="space-y-1 text-sm">
-          <li v-for="l in communityLinks" :key="l.label">
+          <li v-for="l in communityLinks" :key="l.id">
             <UButton
               :to="l.to"
               :icon="l.icon"
@@ -34,7 +34,7 @@ const communityLinks = [
               size="sm"
               class="px-0"
             >
-              {{ l.label }}
+              {{ l.labelKey ? t(l.labelKey) : l.label }}
             </UButton>
           </li>
         </ul>
