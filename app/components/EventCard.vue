@@ -37,7 +37,7 @@ defineProps<{
           </p>
         </div>
         <UBadge v-if="event.talks?.length" color="neutral" variant="subtle">
-          {{ event.talks.length }} talk{{ event.talks.length > 1 ? 's' : '' }}
+          {{ event.talks.length }} {{ t('events.card.talk', event.talks.length) }}
         </UBadge>
       </div>
     </template>

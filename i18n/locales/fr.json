@@ -48,6 +48,7 @@
     "talks": "Talks",
     "noTalks": "Aucun talk renseigné pour cet événement.",
     "card": {
+      "talk": "talk | talks",
       "partners": "Partenaires :",
       "seeDetail": "Voir le détail",
       "replay": "Replay",
