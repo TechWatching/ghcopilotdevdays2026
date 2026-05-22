@@ -45,10 +45,10 @@
     "partners": "Partenaires",
     "seeReplay": "Voir le replay",
     "meetupPage": "Page Meetup",
-    "talks": "Talks",
+    "talks": "Présentations",
     "noTalks": "Aucun talk renseigné pour cet événement.",
     "card": {
-      "talk": "talk | talks",
+      "talk": "présentation | présentations",
       "partners": "Partenaires :",
       "seeDetail": "Voir le détail",
       "replay": "Replay",
