@@ -9,7 +9,7 @@ const sorted = computed(() =>
   [...(speakers.value ?? [])].sort((a, b) => a.lastname.localeCompare(b.lastname, 'fr'))
 )
 
-useSeoMeta({ title: t('seo.speakers') })
+useSeoMeta({ title: () => t('seo.speakers') })
 </script>
 
 <template>

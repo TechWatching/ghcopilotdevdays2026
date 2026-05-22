@@ -14,10 +14,10 @@
 const { t } = useI18n()
 
 useSeoMeta({
-  title: t('seo.title'),
-  description: t('seo.description'),
-  ogTitle: t('seo.ogTitle'),
-  ogDescription: t('seo.ogDescription'),
+  title: () => t('seo.title'),
+  description: () => t('seo.description'),
+  ogTitle: () => t('seo.ogTitle'),
+  ogDescription: () => t('seo.ogDescription'),
   ogImage: '/social-card.png',
   twitterCard: 'summary_large_image'
 })

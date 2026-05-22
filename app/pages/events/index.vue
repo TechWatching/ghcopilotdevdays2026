@@ -10,7 +10,7 @@ const events = computed(() => {
   return [...list].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 })
 
-useSeoMeta({ title: t('seo.events') })
+useSeoMeta({ title: () => t('seo.events') })
 </script>
 
 <template>
@@ -21,7 +21,7 @@ useSeoMeta({ title: t('seo.events') })
         <p class="mt-2 text-muted">
           {{ t('events.description') }}
         </p>
-        <UBadge class="mt-4" color="primary" variant="subtle">{{ events.length }} {{ t('events.badge') }}</UBadge>
+        <UBadge class="mt-4" color="primary" variant="subtle">{{ t('events.badge', events.length, { count: events.length }) }}</UBadge>
       </UContainer>
     </section>
 

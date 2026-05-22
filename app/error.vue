@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const { t } = useI18n()
 const error = useError()
-useSeoMeta({ title: t('seo.error') })
+useSeoMeta({ title: () => t('seo.error') })
 </script>
 
 <template>
