@@ -11,7 +11,7 @@ permissions:
   pull-requests: read
 
 tracker-id: pr-doc-updater
-engine: claude
+engine: copilot
 strict: true
 
 network:
