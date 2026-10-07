@@ -5,6 +5,8 @@ on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
 
+if: ${{ !startsWith(github.event.pull_request.title, '[docs] ') }}
+
 permissions:
   contents: read
   issues: read
