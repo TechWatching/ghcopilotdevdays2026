@@ -36,12 +36,12 @@ tools:
     toolsets: [default]
   edit:
   bash:
-    - "find content -name '*.yml' -o -name '*.md'"
+    - 'find content -name "*.yml" -o -name "*.md"'
     - "find content -maxdepth 2 -ls"
-    - "cat 'content/Information about MTG.md'"
+    - 'cat "content/Information about MTG.md"'
     - "cat content/meetups/events.yml"
-    - "find content/speakers -name '*.yml' -exec cat {} +"
-    - "find content/talks -name '*.yml' -exec cat {} +"
+    - 'find content/speakers -name "*.yml" -exec cat {} +'
+    - 'find content/talks -name "*.yml" -exec cat {} +'
     - "git"
 
 timeout-minutes: 30
