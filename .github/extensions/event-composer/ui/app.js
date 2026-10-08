@@ -261,6 +261,7 @@ function adoptPlan(plan, basis = S.draft) {
     S.plan = plan ?? null;
 }
 
+let undoGeneration = 0;
 const cloneDraft = (draft = S.draft) => JSON.parse(JSON.stringify(draft));
 const isBlankDraft = (d) =>
     !d || (Object.values(d.event ?? {}).every((v) => v === "") && !(d.talks?.length ?? 0) && !(d.partners?.length ?? 0));
@@ -390,11 +391,11 @@ toastEl.addEventListener("focusout", () => setTimeout(releaseToast, 0));
 
 // Offers Undo for a change; `restore` returns false when the change can no longer be undone.
 function withUndo(text, restore, focusAfter) {
-    const draft = S.draft;
+    const generation = undoGeneration;
     toast(text, {
         action: "Undo",
         onAction: () => {
-            if (S.draft !== draft || restore() === false) {
+            if (S.creating || S.expired || undoGeneration !== generation || restore() === false) {
                 toast("The draft has changed since, so this can't be undone.");
                 return;
             }
@@ -510,6 +511,8 @@ function paintSave() {
 // --- Server state -------------------------------------------------------------------
 
 function adoptState(st) {
+    undoGeneration++;
+    S.combos.clear();
     S.rev = st.rev;
     S.draft = st.draft;
     S.catalog = st.catalog ?? null;
@@ -1360,4 +1363,488 @@ async function refreshCalendar() {
     renderDerived();
 }
 
-// @@CONTINUE@@
+// --- Talks, speakers and partners ------------------------------------------------------
+
+function mutate(change) {
+    if (S.creating || S.expired) return;
+    change();
+    edited(true);
+    render();
+}
+
+function removeItem(listKp, key, label, focusAfter) {
+    const path = indexPathOf(listKp);
+    const list = path && getAt(S.draft, path);
+    const index = list?.findIndex((x) => x.key === key) ?? -1;
+    if (index < 0 || S.creating || S.expired) return;
+    const item = JSON.parse(JSON.stringify(list[index]));
+    const nextKey = list[index + 1]?.key;
+    mutate(() => list.splice(index, 1));
+    focusId(focusAfter);
+    withUndo(`${label} removed.`, () => {
+        const currentPath = indexPathOf(listKp);
+        const current = currentPath && getAt(S.draft, currentPath);
+        const limit = S.limits[listKp.split(".").at(-1)];
+        if (!current || (limit && current.length >= limit) || current.some((x) => x.key === key)) return false;
+        const next = current.findIndex((x) => x.key === nextKey);
+        current.splice(next < 0 ? Math.min(index, current.length) : next, 0, item);
+    }, focusAfter);
+}
+
+function newSpeaker(name = "") {
+    const [firstname = "", ...rest] = name.trim().split(/\s+/);
+    return { key: newKey(), mode: "new", firstname, lastname: rest.join(" "), role: "", photo: "", photoUpload: null,
+        company: { name: "", link: "", logo: "", logoUpload: null }, socials: [] };
+}
+
+function speakerCombo(talk, add) {
+    const id = `pick-${talk.key}`;
+    const state = S.combos.get(id) ?? { query: "", open: false, active: 0 };
+    S.combos.set(id, state);
+    const input = h("input", { id, class: "input", role: "combobox", autocomplete: "off", value: state.query,
+        placeholder: "Search by name or company…", "data-focus": id, "aria-autocomplete": "list", "aria-controls": `${id}-list`,
+        "aria-expanded": "false", disabled: talk.speakers.length >= (S.limits.speakers ?? 20) });
+    const list = h("div", { id: `${id}-list`, class: "combo-list", role: "listbox", "aria-label": "Speakers", hidden: true });
+    let choices = [];
+    const choose = (choice) => {
+        if (!choice || S.creating || S.expired) return;
+        const speaker = choice.new ? newSpeaker(state.query) : { key: newKey(), mode: "existing", id: choice.id };
+        state.query = "";
+        state.open = false;
+        state.skipFocus = !choice.new;
+        add(speaker);
+        focusId(choice.new ? `talks.${talk.key}.speakers.${speaker.key}.firstname` : id);
+    };
+    const paint = () => {
+        const query = nameKey(state.query);
+        choices = (S.catalog?.speakers ?? []).filter((s) => !talk.speakers.some((x) => x.mode === "existing" && x.id === s.id)
+            && nameKey(`${s.name || fullName(s)} ${s.company || ""}`).includes(query));
+        choices.push({ new: true });
+        state.active = Math.max(0, Math.min(state.active, choices.length - 1));
+        input.setAttribute("aria-expanded", String(state.open));
+        if (state.open) input.setAttribute("aria-activedescendant", `${id}-opt-${state.active}`);
+        else input.removeAttribute("aria-activedescendant");
+        list.hidden = !state.open;
+        list.replaceChildren(...choices.map((s, i) => h("div", { id: `${id}-opt-${i}`, class: `combo-opt${s.new ? " new" : ""}`,
+            role: "option", "aria-selected": String(i === state.active), onpointerdown: (e) => e.preventDefault(), onclick: () => choose(s) },
+            s.new ? icon("plus") : null, h("div", { class: "combo-opt-text" }, s.new ? `New speaker${state.query.trim() ? ` “${state.query.trim()}”` : "…"}` : s.name || fullName(s),
+                !s.new && s.company ? h("p", { class: "combo-opt-meta" }, s.company) : null))));
+    };
+    input.addEventListener("focus", () => { if (state.skipFocus) state.skipFocus = false; else state.open = true; paint(); });
+    input.addEventListener("input", () => { state.query = input.value; state.active = 0; state.open = true; paint(); });
+    input.addEventListener("blur", () => { state.open = false; paint(); });
+    input.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") { e.preventDefault(); state.open = false; paint(); }
+        else if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+            e.preventDefault();
+            if (state.open) state.active += e.key === "ArrowDown" ? 1 : -1;
+            state.open = true;
+            paint();
+            document.getElementById(`${id}-opt-${state.active}`)?.scrollIntoView({ block: "nearest" });
+        } else if (e.key === "Enter" && state.open) { e.preventDefault(); choose(choices[state.active]); }
+    });
+    paint();
+    return h("div", { class: "field" }, h("label", { htmlFor: id }, "Add a speaker"), h("div", { class: "combo" }, input, list));
+}
+
+function imageField(path, label) {
+    const kp = keyPath(path);
+    const uploadPath = `${path}Upload`;
+    const ref = getAt(S.draft, uploadPath);
+    const uploading = S.uploading.has(kp);
+    const control = field(path, { label, placeholder: "/speakers/jane-doe.png or https://…" });
+    const input = control.querySelector("input");
+    input.disabled = uploading;
+    const picker = h("input", { type: "file", accept: IMAGE_ACCEPT, hidden: true, "aria-label": `Choose ${label.toLowerCase()}`, onchange: (e) => {
+        const file = e.target.files[0];
+        if (file) void uploadImage(kp, file);
+    } });
+    const url = ref ? stagedUrl(ref) : repoUrl(input.value);
+    const preview = h("div", { class: "image-preview", "data-image-preview": kp }, url ? h("img", { src: url, alt: `${label} preview`, onerror: (e) => e.target.replaceWith(icon("image")) }) : icon("image"));
+    const controls = h("div", { class: "image-controls" });
+    if (ref) {
+        input.hidden = true;
+        controls.append(h("span", { class: "upload-chip", title: ref.name }, ref.name, ` · ${formatSize(ref.size)}`));
+    } else controls.append(input);
+    controls.append(picker, h("button", { type: "button", class: "btn small", "data-focus": `upload:${kp}`, disabled: uploading,
+        onclick: () => picker.click() }, icon("upload"), uploading ? "Uploading…" : ref ? "Replace" : "Upload"));
+    if (ref || input.value) controls.append(h("button", { type: "button", class: "btn small quiet", disabled: uploading,
+        "aria-label": `Clear ${label.toLowerCase()}`, onclick: () => mutate(() => {
+            const current = indexPathOf(kp);
+            if (current) { setAt(S.draft, current, ""); setAt(S.draft, `${current}Upload`, null); }
+        }) }, icon("x")));
+    const zone = h("div", { class: "image-field", "aria-busy": String(uploading), ondragover: (e) => {
+        e.preventDefault(); if (!uploading) zone.classList.add("drop");
+    }, ondragleave: (e) => { if (!zone.contains(e.relatedTarget)) zone.classList.remove("drop"); }, ondrop: (e) => {
+        e.preventDefault(); zone.classList.remove("drop");
+        if (e.dataTransfer.files.length !== 1) { S.localErrors.set(kp, "Drop one image at a time."); renderDerived(); }
+        else void uploadImage(kp, e.dataTransfer.files[0]);
+    } }, preview, controls);
+    control.insertBefore(zone, control.querySelector(".msgs"));
+    if (ref) controls.prepend(input);
+    control.append(h("p", { class: "hint" }, `Or drop an image here · PNG, JPEG, GIF, WebP or SVG · up to ${formatSize(S.limits.upload ?? 5 * 1024 * 1024)}`));
+    return control;
+}
+
+async function uploadImage(kp, file) {
+    if (S.creating || S.expired || S.uploading.has(kp) || !indexPathOf(kp)) return;
+    S.localErrors.delete(kp);
+    const limit = S.limits.upload ?? 5 * 1024 * 1024;
+    if (file.size > limit || !file.size) {
+        S.localErrors.set(kp, !file.size ? "This file is empty. Choose an image." : `Choose an image under ${formatSize(limit)}.`);
+        renderDerived(); return;
+    }
+    const request = {};
+    const generation = undoGeneration;
+    S.uploading.set(kp, request);
+    render();
+    try {
+        const ref = await api("POST", `/api/upload?name=${encodeURIComponent(file.name)}`, file, { raw: true });
+        const path = indexPathOf(kp);
+        if (path && generation === undoGeneration && S.uploading.get(kp) === request) {
+            setAt(S.draft, path, "");
+            setAt(S.draft, `${path}Upload`, ref);
+            edited(true);
+            announce(`${file.name} uploaded.`);
+        }
+    } catch (err) {
+        if (err.code === "forbidden") return expired();
+        if (indexPathOf(kp) && generation === undoGeneration) S.localErrors.set(kp, `${err.message} Choose another image or try again.`);
+    } finally {
+        S.uploading.delete(kp);
+        render();
+        focusId(`upload:${kp}`, false);
+    }
+}
+
+function buildSocials(speaker, path) {
+    const listKp = keyPath(`${path}.socials`);
+    return h("div", { class: "socials" }, h("h4", null, "Social profiles"), speaker.socials.map((social, i) => {
+        const sp = `${path}.socials.${i}`;
+        const typeKp = keyPath(`${sp}.type`);
+        const linkKp = keyPath(`${sp}.link`);
+        const select = h("select", { class: "input", value: social.type, "aria-label": `Social network ${i + 1}`, "data-focus": typeKp, "data-path": `${sp}.type` },
+            h("option", { value: "" }, "Auto-detect"), social.type && !SOCIAL_TYPES.includes(social.type) ? h("option", { value: social.type }, SOCIAL_LABELS[social.type] || social.type) : null,
+            SOCIAL_TYPES.map((type) => h("option", { value: type }, SOCIAL_LABELS[type])));
+        const link = h("input", { type: "url", class: "input", value: social.link, placeholder: "https://", maxlength: S.limits.text,
+            "aria-label": `Social link ${i + 1}`, "data-focus": linkKp, "data-path": `${sp}.link`, "aria-describedby": `m-${linkKp}` });
+        return h("div", { class: "social" }, select, link,
+            h("button", { type: "button", class: "btn small quiet", "aria-label": `Remove social profile ${i + 1}`,
+                onclick: () => removeItem(listKp, social.key, "Social profile", `add:${listKp}`) }, icon("x")),
+            slot({ kps: [linkKp, typeKp], ids: [linkKp, typeKp] }),
+            !social.type && detectSocialType(social.link) ? h("p", { class: "hint social-detected" }, `Detected: ${SOCIAL_LABELS[detectSocialType(social.link)]}`) : null);
+    }), h("button", { type: "button", class: "btn small", "data-focus": `add:${listKp}`, disabled: speaker.socials.length >= (S.limits.socials ?? 12), onclick: () => {
+        const social = { key: newKey(), type: "", link: "" };
+        mutate(() => { const p = indexPathOf(listKp); if (p) getAt(S.draft, p).push(social); });
+        focusId(`${listKp}.${social.key}.link`);
+    } }, icon("plus"), "Add social profile"));
+}
+
+function buildTalks() {
+    const talks = S.draft.talks;
+    return h("section", { class: "sec", id: "sec-talks", "aria-labelledby": "talks-h" },
+        h("div", { class: "sec-head" }, h("h2", { id: "talks-h" }, "Talks and speakers")),
+        slot({ kps: ["talks"], always: true }),
+        talks.length ? h("div", { class: "talks" }, talks.map((talk, i) => {
+            const path = `talks.${i}`;
+            const move = (offset) => {
+                let target;
+                mutate(() => {
+                    const current = S.draft.talks.findIndex((t) => t.key === talk.key);
+                    target = current + offset;
+                    if (current < 0 || target < 0 || target >= S.draft.talks.length) return;
+                    const [item] = S.draft.talks.splice(current, 1);
+                    S.draft.talks.splice(target, 0, item);
+                });
+                focusId(`talks.${talk.key}.title`);
+                announce(`Talk moved to position ${target + 1}.`);
+            };
+            return h("div", { class: "talk" },
+                h("div", { class: "talk-rail", "aria-hidden": "true" }, h("span", { class: "talk-num" }, i + 1)),
+                h("div", { class: "talk-body" },
+                    h("div", { class: "talk-head" }, h("h3", null, `Talk ${i + 1}`),
+                        h("button", { type: "button", class: "btn small quiet", disabled: i === 0, "aria-label": `Move talk ${i + 1} up`, onclick: () => move(-1) }, icon("up")),
+                        h("button", { type: "button", class: "btn small quiet", disabled: i === talks.length - 1, "aria-label": `Move talk ${i + 1} down`, onclick: () => move(1) }, icon("down")),
+                        h("button", { type: "button", class: "btn small quiet", "aria-label": `Remove talk ${i + 1}`, onclick: () => removeItem("talks", talk.key, "Talk", "add-talk") }, "Remove")),
+                    field(`${path}.title`, { label: "Title", required: true }),
+                    field(`${path}.abstract`, { label: "Abstract", textarea: true, maxlength: S.limits.abstract }),
+                    field(`${path}.replay`, { label: "Replay", type: "url", placeholder: "https://" }),
+                    buildSpeakers(talk, path)));
+        })) : h("p", { class: "hint" }, "Add a talk to include its description and speakers."),
+        h("button", { type: "button", class: "btn", "data-focus": "add-talk", disabled: talks.length >= (S.limits.talks ?? 30), onclick: () => mutate(() => {
+            S.draft.talks.push({ key: newKey(), title: "", abstract: "", replay: "", speakers: [] });
+        }) }, icon("plus"), "Add talk"));
+}
+
+function buildSpeakers(talk, path) {
+    const speakers = S.catalog?.speakers ?? [];
+    const pickerId = `pick-${talk.key}`;
+    const add = (speaker) => mutate(() => {
+        const current = S.draft.talks.find((t) => t.key === talk.key);
+        if (current && current.speakers.length < (S.limits.speakers ?? 20)) current.speakers.push(speaker);
+    });
+    return h("div", { class: "speakers-block" },
+        h("h4", null, "Speakers"),
+        slot({ kps: [keyPath(`${path}.speakers`)], always: true }),
+        h("div", { class: "speakers" }, talk.speakers.map((speaker, i) => {
+            const sp = `${path}.speakers.${i}`;
+            const known = speakers.find((s) => s.id === speaker.id);
+            return h("div", { class: `speaker ${speaker.mode}` },
+                h("div", { class: "speaker-row" },
+                    h("div", { class: "speaker-who" },
+                        speaker.mode === "existing" && repoUrl(known?.photo) ? h("img", { class: "avatar", src: repoUrl(known.photo), alt: "", onerror: (e) => e.target.remove() }) : null,
+                        h("div", null, h("p", { class: "speaker-name" }, speaker.mode === "existing" ? known?.name || fullName(known) || `Speaker #${speaker.id}` : `New speaker ${i + 1}`),
+                            known?.company ? h("p", { class: "speaker-meta" }, [known.role, known.company].filter(Boolean).join(" · ")) : null,
+                            h("p", { class: "speaker-meta", "data-speaker-status": speaker.key }))),
+                    h("button", { type: "button", class: "btn small quiet", "aria-label": `Remove speaker ${i + 1} from ${talk.title || "this talk"}`, onclick: () => removeItem(keyPath(`${path}.speakers`), speaker.key, "Speaker", pickerId) }, "Remove")),
+                slot({ kps: [keyPath(sp)], always: true }),
+                speaker.mode === "new" ? [
+                    field(`${sp}.firstname`, { label: "First name", required: true }),
+                    field(`${sp}.lastname`, { label: "Last name", required: true }),
+                    field(`${sp}.role`, { label: "Role" }),
+                    imageField(`${sp}.photo`, "Photo"),
+                    companyField(`${sp}.company.name`, "Company"),
+                    field(`${sp}.company.link`, { label: "Company link", type: "url" }),
+                    imageField(`${sp}.company.logo`, "Company logo"),
+                    buildSocials(speaker, sp),
+                ] : null);
+        })),
+        speakerCombo(talk, add));
+}
+
+function companyField(path, label, required = false) {
+    const kp = keyPath(path);
+    const listId = `companies-${kp}`;
+    return field(path, { label, required, list: listId, extra: h("datalist", { id: listId },
+        (S.catalog?.companies ?? []).map((company) => h("option", { value: company.name }))) });
+}
+
+function autofillCompany(path, previousName) {
+    const parent = path.slice(0, -5);
+    const company = getAt(S.draft, parent);
+    const known = (S.catalog?.companies ?? []).find((c) => nameKey(c.name) === nameKey(company.name));
+    if (!known) return;
+    const previous = (S.catalog?.companies ?? []).find((c) => nameKey(c.name) === nameKey(previousName));
+    if (!company.link || (previous?.link && company.link === previous.link)) company.link = known.link || "";
+    if (!company.logoUpload && (!company.logo || (previous?.logo && company.logo === previous.logo))) company.logo = known.logo || "";
+}
+
+function buildPartners() {
+    return h("section", { class: "sec", id: "sec-partners", "aria-labelledby": "partners-h" },
+        h("div", { class: "sec-head" }, h("h2", { id: "partners-h" }, "Partners")),
+        h("div", { class: "partners" }, S.draft.partners.map((partner, i) => {
+            const path = `partners.${i}`;
+            return h("div", { class: "partner" },
+                h("div", { class: "partner-head" }, h("h3", null, `Partner ${i + 1}`),
+                    h("button", { type: "button", class: "btn small quiet", "aria-label": `Remove partner ${i + 1}`,                     onclick: () => removeItem("partners", partner.key, "Partner", "add-partner") }, "Remove")),
+                companyField(`${path}.name`, "Name", true),
+                field(`${path}.link`, { label: "Link", type: "url" }),
+                imageField(`${path}.logo`, "Logo"));
+        })),
+        h("button", { type: "button", class: "btn", "data-focus": "add-partner", disabled: S.draft.partners.length >= (S.limits.partners ?? 30), onclick: () => mutate(() => {
+            S.draft.partners.push({ key: newKey(), name: "", link: "", logo: "", logoUpload: null });
+        }) }, icon("plus"), "Add partner"));
+}
+
+function paintStatuses() {
+    for (const el of app.querySelectorAll("[data-speaker-status]")) {
+        const info = S.plan?.speakers?.[el.dataset.speakerStatus];
+        const text = !info ? "" : info.status === "merged" ? `Shares the profile from talk ${info.primaryTalk + 1} · speaker #${info.id}`
+            : info.status === "existing" ? `Existing profile · speaker #${info.id}`
+            : info.status === "new" ? `New profile · speaker #${info.id}` : "A profile with this name already exists";
+        if (el.textContent !== text) el.textContent = text;
+    }
+}
+
+// --- Review and creation --------------------------------------------------------------
+
+const reviewSig = () => JSON.stringify([S.plan, S.attempted]);
+
+function buildReview() {
+    const issues = S.plan?.issues ?? [];
+    const files = S.plan?.files ?? [];
+    return [
+        issues.length ? h("ul", { class: "issues" }, issues.map((issue) => h("li", { class: `issue ${issue.level}` },
+            icon(issue.level), h("div", null, h("p", null, `${LEVEL_WORD[issue.level]}: ${issue.message}`),
+                issue.path ? h("p", { class: "issue-where" }, issue.path) : null),
+            h("div", { class: "issue-actions" }, issue.kp ? h("button", { type: "button", class: "btn small quiet", "data-focus": `goto:${issue.kp}:${issue.code}`, onclick: () => {
+                S.touched.add(issue.kp);
+                renderDerived();
+                const target = byFocus(issue.kp) || app.querySelector(`[data-focus^="${CSS.escape(issue.kp)}."]`) || document.getElementById(`sec-${issue.kp.split(".")[0]}`);
+                if (target) { if (!target.matches("input, select, textarea, button, a[href]")) target.setAttribute("tabindex", "-1"); target.focus(); target.scrollIntoView({ block: "center", behavior: "instant" }); }
+            } }, "Go to") : null, issue.fix ? fixButton(issue, "btn small", "review-fix") : null)))) : h("p", { class: "summary" }, "No validation issues."),
+        h("h3", { class: "files-head" }, `Files to write (${files.length})`),
+        files.length ? h("div", { class: "files" }, files.map((file) => h("details", {
+            class: "file", open: S.openFiles.has(file.path), ontoggle: (e) => {
+                if (e.target.open) S.openFiles.add(file.path);
+                else S.openFiles.delete(file.path);
+            },
+        }, h("summary", { "data-focus": `file:${file.path}` }, h("span", { class: `badge ${file.status}` }, file.status), h("code", { class: "file-path" }, file.path)),
+        file.content != null ? h("pre", { class: "code" }, file.content) : file.diff ? h("pre", { class: "code", "aria-label": "File changes" }, file.diff.map((row) =>
+            h("span", { class: `d ${row.t}` }, row.t === "gap" ? "…" : `${row.t === "add" ? "+" : row.t === "del" ? "−" : " "} ${row.text}`)))
+            : file.kind === "image" ? h("div", { class: "file-image" }, h("img", { src: withToken(file.previewUrl), alt: file.label || "Uploaded image", onerror: (e) => e.target.replaceWith(h("span", null, "Preview unavailable")) }),
+                h("p", null, file.label || "Image", h("span", { class: "muted" }, ` · ${formatSize(file.size)}`))) : null))) : h("p", { class: "hint" }, "Fill in the event to preview its files."),
+    ];
+}
+
+const barSig = () => JSON.stringify([S.creating, S.uploading.size, S.save.state, hasPendingEdits(), S.plan?.counts, S.plan?.ok]);
+
+function buildBar() {
+    const errors = S.plan?.counts?.error ?? 0;
+    const warnings = S.plan?.counts?.warning ?? 0;
+    const status = S.creating ? "Creating event…" : S.uploading.size ? "Wait for image uploads to finish…" : hasPendingEdits() ? "Saving your latest changes…" : errors ? `Fix ${plural(errors, "error")} before creating.` : warnings ? `${plural(warnings, "warning")} to review.` : "Ready to create the event.";
+    return [h("p", { class: `bar-status ${errors ? "error" : warnings ? "warning" : "ready"}`, role: "status" }, icon(errors ? "error" : warnings ? "warning" : "check"), status),
+        h("div", { class: "bar-actions" }, h("button", { type: "button", class: "btn primary", "data-focus": "create-event", disabled: S.creating || S.uploading.size > 0, onclick: () => void createEvent() }, S.creating ? "Creating…" : "Create event"))];
+}
+
+async function createEvent() {
+    if (S.creating || S.expired || S.uploading.size) return;
+    S.creating = true;
+    app.inert = true;
+    renderDerived();
+    try {
+        if (!(await flushSave()) || hasPendingEdits()) return;
+        try {
+            await api("POST", "/api/create", {});
+        } catch (err) {
+            if (err.status !== 409 || err.code !== "date_conflict") throw err;
+            if (!confirm(`${err.message}\n\nCreate the event on this date anyway?`)) return;
+            await api("POST", "/api/create", { acknowledgeConflicts: true });
+        }
+        await reload();
+    } catch (err) {
+        if (err.code === "forbidden") return expired();
+        if (err.status === 422) {
+            S.attempted = true;
+            if (err.extra?.plan) adoptPlan(err.extra.plan);
+            render();
+            announce(err.message, true);
+        } else toast(`Couldn't create the event. ${err.message}`);
+    } finally {
+        S.creating = false;
+        app.inert = false;
+        renderDerived();
+    }
+}
+
+function applyFix(kp, code) {
+    const issue = (S.plan?.issues ?? []).find((i) => i.kp === kp && i.code === code);
+    const fix = issue?.fix;
+    if (!fix || S.creating) return;
+    if (fix.action === "refresh-calendar") return void refreshCalendar();
+    const path = indexPathOf(kp);
+    if (!path) return;
+    if (fix.action === "set") setAt(S.draft, path, fix.value);
+    else if (fix.action === "use-existing") {
+        const speaker = getAt(S.draft, path);
+        setAt(S.draft, path, { key: speaker.key, mode: "existing", id: fix.speakerId });
+    } else return;
+    liveUpdate(kp);
+    edited(true);
+    render();
+}
+
+function buildDone() {
+    const result = S.lastResult;
+    return [buildTop(), h("section", { class: "done" },
+        h("h2", { class: "done-title", tabIndex: -1, "data-focus": "done-title" }, icon("check"), `Created “${result.name}”`),
+        h("p", null, `${fmtLong(result.date)} · Files are written locally, not committed.`),
+        h("ul", { class: "done-files" }, result.files.map((file) => h("li", null, h("span", { class: `badge ${file.status}` }, file.status), h("code", { class: "file-path" }, file.path)))),
+        h("div", { class: "done-actions" },
+            h("button", { type: "button", class: "btn", onclick: () => { S.dismissed = result.at; render(); focusId("event.name"); } }, "Start another event"),
+            h("button", { type: "button", class: "btn primary", disabled: S.asked === result.at || S.asked === "sending" || result.sameWorktree === false, onclick: async () => {
+                S.asked = "sending";
+                render();
+                try {
+                    await api("POST", "/api/ask-copilot", {});
+                    S.asked = result.at;
+                    toast("Asked Copilot to review the files and open a pull request.");
+                } catch (err) {
+                    S.asked = "";
+                    if (err.code === "forbidden") return expired();
+                    toast(`Couldn't ask Copilot. ${err.message}`);
+                }
+                render();
+            } }, S.asked === result.at ? "Copilot notified" : S.asked === "sending" ? "Asking Copilot…" : "Ask Copilot to review and open a PR")))];
+}
+
+// --- Wiring and boot ------------------------------------------------------------------
+
+function liveUpdate(kp) {
+    if (kp === "event.date") {
+        S.focusDay = S.draft.event.date;
+        syncMonth();
+    }
+    renderDerived();
+}
+
+function expired() {
+    S.expired = true;
+    source?.close();
+    clearTimeout(saveTimer);
+    clearTimeout(retryTimer);
+    app.inert = false;
+    app.removeAttribute("aria-busy");
+    app.replaceChildren(h("div", { class: "fail", role: "alert" }, h("h1", null, "Canvas connection expired"), h("p", null, "Reopen the event composer from Copilot to reconnect. Your saved draft is kept.")));
+}
+
+function onEdit(e) {
+    const control = e.target.closest?.("[data-path]");
+    if (!control || S.creating || S.expired) return;
+    const kp = control.dataset.focus;
+    const path = indexPathOf(kp);
+    if (!path) return;
+    const value = control.type === "checkbox" ? control.checked : control.value;
+    const previous = getAt(S.draft, path);
+    if (previous === value) return;
+    if (S.uploading.has(kp)) return;
+    S.localErrors.delete(kp);
+    setAt(S.draft, path, value);
+    if (path.endsWith(".photo") || path.endsWith(".logo")) {
+        setAt(S.draft, `${path}Upload`, null);
+        const preview = app.querySelector(`[data-image-preview="${CSS.escape(kp)}"]`);
+        const url = repoUrl(value);
+        preview?.replaceChildren(url ? h("img", { src: url, alt: "Image preview", onerror: (e) => e.target.replaceWith(icon("image")) }) : icon("image"));
+    }
+    if (path.endsWith(".company.name") || /^partners\.\d+\.name$/.test(path)) {
+        autofillCompany(path, previous);
+        const parent = path.slice(0, -5);
+        for (const part of ["link", "logo"]) {
+            const control = byFocus(keyPath(`${parent}.${part}`));
+            if (control) control.value = getAt(S.draft, `${parent}.${part}`);
+        }
+    }
+    edited();
+    liveUpdate(kp);
+}
+app.addEventListener("input", onEdit);
+app.addEventListener("change", onEdit);
+app.addEventListener("focusout", (e) => {
+    const control = e.target.closest?.("[data-path]");
+    if (!control || S.expired) return;
+    S.touched.add(control.dataset.focus);
+    renderDerived();
+    void flushSave();
+});
+window.addEventListener("online", () => void flushSave());
+window.addEventListener("focus", () => void refreshState(true));
+document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) void refreshState(true);
+});
+
+async function boot() {
+    app.setAttribute("aria-busy", "true");
+    try {
+        adoptState(await api("GET", "/api/state"));
+        S.booted = true;
+        syncMonth();
+        render();
+        openEvents();
+    } catch (err) {
+        if (err.code === "forbidden") return expired();
+        app.removeAttribute("aria-busy");
+        app.replaceChildren(h("div", { class: "fail", role: "alert" }, h("h1", null, "Couldn't load the event composer"), h("p", null, err.message),
+            h("button", { type: "button", class: "btn", onclick: () => void boot() }, "Try again")));
+    }
+}
+void boot();
