@@ -6,7 +6,7 @@ company:
     name: GitHub
     link: https://github.com
     logo: /companies/github.png
-talks: [13, 16]
+talks: [13, 16, 18]
 socials:
     - type: GITHUB
       link: https://github.com/tgrall

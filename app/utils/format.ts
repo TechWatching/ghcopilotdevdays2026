@@ -1,10 +1,12 @@
-// Logos that are white (or near-white) on transparent and need a dark backdrop to be visible.
+// Logos that are white or light-colored on transparent and need a dark backdrop to be visible.
 const WHITE_LOGOS = new Set<string>([
   '/companies/sfeir.svg',
   '/companies/pulumi.svg',
   '/companies/enseirb-matemca.svg',
   '/companies/github.png',
-  '/companies/hello-asso.png'
+  '/companies/hello-asso.png',
+  '/companies/packmind.svg',
+  '/companies/wit-bordeaux.png'
 ])
 
 export function isWhiteLogo(path?: string): boolean {

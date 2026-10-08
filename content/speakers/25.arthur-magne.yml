@@ -1,0 +1,9 @@
+firstname: Arthur
+lastname: Magne
+photo: /speakers/arthur-magne.jpg
+role: CTPO
+company:
+    name: Packmind
+    link: https://packmind.com/
+    logo: /companies/packmind.svg
+talks: [21]

@@ -1,0 +1,9 @@
+firstname: Romain
+lastname: Serre
+photo: /speakers/romain-serre.jpg
+role: "CTO & Microsoft MVP"
+company:
+    name: PulsivIT
+    link: https://pulsivit.fr/
+    logo: /companies/pulsivit.png
+talks: [24, 26]

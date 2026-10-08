@@ -6,8 +6,8 @@ role: Dévelopeur
 company: 
     name: Avanade
     link: https://www.avanade.com/fr-fr
-    logo: /companies/avanade.png
-talks: [7, 17]
+    logo: /companies/Avanade.png
+talks: [7, 17, 22, 23, 24]
 socials:
     - type: GITHUB
       link: https://github.com/TechWatching

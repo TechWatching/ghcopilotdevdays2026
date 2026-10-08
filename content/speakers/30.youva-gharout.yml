@@ -1,0 +1,8 @@
+firstname: Youva
+lastname: Gharout
+role: Consultant Data
+company:
+    name: Thélio
+    link: https://www.thelio.fr/
+    logo: /companies/thelio.svg
+talks: [27]

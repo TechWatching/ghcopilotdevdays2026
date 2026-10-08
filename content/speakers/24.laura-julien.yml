@@ -1,0 +1,9 @@
+firstname: Laura
+lastname: Julien
+photo: /speakers/laura-julien.jpg
+role: CTO
+company:
+    name: Loré
+    link: https://www.lore.fr/
+    logo: /companies/lore.svg
+talks: [20]

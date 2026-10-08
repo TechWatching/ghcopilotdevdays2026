@@ -1,0 +1,7 @@
+firstname: Arnaud
+lastname: Petitjean
+company:
+    name: Microsoft
+    link: https://www.microsoft.com/fr-fr
+    logo: /companies/microsoft.png
+talks: [24]

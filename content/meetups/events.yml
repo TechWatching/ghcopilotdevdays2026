@@ -60,7 +60,7 @@ events:
       - name: SFEIR
         link: https://www.sfeir.com/
         logo: /companies/sfeir.svg
-    replay: https://www.youtube.com/live/WTA8j-vYnC0
+    replay: https://www.youtube.com/live/xJxYUpHa_r0
   - id: 6
     name: Meetup n°6
     date: 2025-04-10
@@ -93,3 +93,85 @@ events:
       - name: Microsoft
         url: https://developer.microsoft.com/
         logo: /companies/microsoft.png
+    replay: https://www.youtube.com/live/TkQZfDq7LTI
+  - id: 9
+    name: Meetup n°8 - MTG x GitHub x JUG x Betclic
+    date: 2026-01-08
+    url: https://www.meetup.com/mtg-bordeaux/events/312635439
+    location: Betclic
+    talks: [18]
+    partners:
+      - name: GitHub
+        link: https://github.com
+        logo: /companies/github.png
+      - name: Betclic
+        link: https://www.betclic.fr/
+        logo: /companies/betclic.png
+      - name: Bordeaux JUG
+        link: https://www.bordeauxjug.org/
+        logo: /companies/bordeaux-jug.png
+    replay: https://www.youtube.com/live/4uAOd8_IZr4
+  - id: 10
+    name: "Meetup n°9 - IA : Productivité, Données et réalité"
+    date: 2026-02-04
+    url: https://www.meetup.com/mtg-bordeaux/events/312868461
+    location: École de Turing
+    talks: [19,20,21]
+    partners:
+      - name: Women in Tech Bordeaux
+        link: https://wit-bdx.com/
+        logo: /companies/wit-bordeaux.png
+      - name: Programisto
+        link: https://programisto.fr/
+        logo: /companies/programisto.png
+    replay: https://www.youtube.com/live/z0PDgNDzIow
+  - id: 11
+    name: GitHub Copilot Dev Days Bordeaux (Avril 2026)
+    date: 2026-04-30
+    url: https://www.meetup.com/mtg-bordeaux/events/314271013
+    location: Avanade Bordeaux
+    talks: [22,23]
+    partners:
+      - name: Avanade
+        link: https://www.avanade.com/fr-fr
+        logo: /companies/Avanade.png
+    replay: https://www.youtube.com/live/wFhwpCbprBw
+  - id: 12
+    name: "Microsoft Build 2026 //localhost:bordeaux"
+    date: 2026-06-08
+    url: https://www.meetup.com/mtg-bordeaux/events/314984774
+    location: École de Turing
+    talks: [24,25,26]
+    partners:
+      - name: Microsoft
+        link: https://developer.microsoft.com/
+        logo: /companies/microsoft.png
+      - name: Programisto
+        link: https://programisto.fr/
+        logo: /companies/programisto.png
+    replay: https://www.youtube.com/live/L9rMyhtrHnI
+  - id: 13
+    name: "Data & IA sous contrôle (MTG:Bordeaux x ApérOps)"
+    date: 2026-07-02
+    url: https://www.meetup.com/mtg-bordeaux/events/315181282
+    location: Thélio
+    talks: [27,28,29]
+    partners:
+      - name: ApérOps
+        link: https://bordeaux-aperops.com/
+        logo: /companies/aperops.png
+      - name: Thélio
+        link: https://www.thelio.fr/
+        logo: /companies/thelio.svg
+    replay: https://www.youtube.com/live/dGJ2v9Wyy-0
+  - id: 14
+    name: GitHub Copilot Dev Days Bordeaux (Octobre 2026)
+    date: 2026-10-08
+    url: https://www.meetup.com/mtg-bordeaux/events/316642284
+    location: Avanade Bordeaux
+    talks: []
+    partners:
+      - name: Avanade
+        link: https://www.avanade.com/fr-fr
+        logo: /companies/Avanade.png
+    replay: https://www.youtube.com/live/zAHtq5qiCiM
