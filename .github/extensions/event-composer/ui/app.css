@@ -298,14 +298,17 @@ input[type="date"].input {
 .btn.small.icon-only {
     width: 28px;
 }
-.btn:disabled {
+.btn:disabled,
+.btn[aria-disabled="true"] {
     opacity: 0.5;
     cursor: not-allowed;
 }
-.btn:disabled:hover {
+.btn:disabled:hover,
+.btn[aria-disabled="true"]:hover {
     background: var(--raise);
 }
-.btn.quiet:disabled:hover {
+.btn.quiet:disabled:hover,
+.btn.quiet[aria-disabled="true"]:hover {
     background: transparent;
 }
 
@@ -496,7 +499,7 @@ input[type="date"].input {
     border: 1px solid var(--line);
     border-radius: 8px;
 }
-.avail h3 {
+.avail :is(h3, h4) {
     font-size: 14px;
     font-weight: var(--font-weight-semibold, 600);
 }
@@ -569,7 +572,7 @@ input[type="date"].input {
     align-items: center;
     gap: 4px;
 }
-.cal-head h3 {
+.cal-head :is(h3, h4) {
     flex: 1;
     text-align: center;
 }
@@ -1231,5 +1234,47 @@ input[type="date"].input {
     }
     .bar-actions .btn {
         flex: 1;
+    }
+}
+
+.verdict.loading {
+    background: var(--raise);
+    color: var(--muted);
+}
+.speaker-who {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+img.avatar {
+    object-fit: cover;
+}
+.combo-opt:hover {
+    background: var(--hover);
+}
+.combo-opt-text {
+    overflow-wrap: anywhere;
+}
+.social-detected {
+    grid-column: 1 / -1;
+}
+.input::placeholder {
+    color: var(--muted);
+    opacity: 1;
+}
+[hidden] {
+    display: none !important;
+}
+@media (max-width: 520px) {
+    .image-controls {
+        flex-wrap: wrap;
+    }
+    .image-controls > .input,
+    .upload-chip {
+        flex-basis: 100%;
+    }
+    .issue-actions {
+        grid-column: 2 / -1;
+        justify-content: flex-start;
     }
 }
