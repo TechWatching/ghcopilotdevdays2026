@@ -1,0 +1,5 @@
+id: 18
+title: "AI Discipline, From Vibe Coding to Spec Driven Development with GitHub Copilot"
+meetup: 9
+abstract: "Une session immersive d'une heure et demie, composée à 90 % de démonstrations, qui raconte l'histoire d'un développeur qui découvre et maîtrise progressivement l'ère agentique de GitHub Copilot. Au programme : un aperçu des nouveautés annoncées lors du GitHub Universe (Coding Agent, Plan Mode, Custom Agents, Mission Control, GitHub Code Quality, Copilot CLI), comment le contexte transforme Copilot en expert de votre base de code (démo en direct), MCP pour connecter Copilot à vos outils et à vos données, le lancement de plusieurs agents de codage en parallèle pour orchestrer à grande échelle (démo en direct), des retours et cas d'usage spécifiques, et des conseils pour démarrer."
+replay: https://www.youtube.com/live/4uAOd8_IZr4?t=715s

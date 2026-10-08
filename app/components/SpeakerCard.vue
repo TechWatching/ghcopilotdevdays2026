@@ -14,29 +14,9 @@ defineProps<{
 </script>
 
 <template>
-  <UCard
-    class="h-full relative"
-    :ui="{ body: 'p-0 sm:p-0' }"
-  >
-    <a
-      v-if="speaker.company?.logo"
-      :href="speaker.company.link || undefined"
-      :target="speaker.company.link ? '_blank' : undefined"
-      :rel="speaker.company.link ? 'noopener' : undefined"
-      :title="speaker.company.name"
-      :aria-label="speaker.company.name"
-      class="absolute top-3 right-3 z-10 w-12 h-12 rounded-md p-1.5 shadow-sm ring-1 ring-black/5 flex items-center justify-center"
-      :class="isWhiteLogo(speaker.company.logo) ? 'bg-gray-900' : 'bg-white dark:bg-gray-100'"
-    >
-      <img
-        :src="speaker.company.logo"
-        :alt="speaker.company.name"
-        class="max-w-full max-h-full object-contain"
-      >
-    </a>
-
+  <UCard class="h-full">
     <template #header>
-      <div class="flex items-center gap-4 pr-14">
+      <div class="flex items-center gap-4">
         <UAvatar
           :src="speaker.photo"
           :alt="`${speaker.firstname} ${speaker.lastname}`"
@@ -49,19 +29,38 @@ defineProps<{
       </div>
     </template>
 
-    <template v-if="speaker.socials?.length" #footer>
-      <div class="flex flex-wrap gap-1">
-        <UButton
-          v-for="s in speaker.socials"
-          :key="s.link"
-          :to="s.link"
-          :icon="socialIcon(s.type)"
-          target="_blank"
-          variant="ghost"
-          color="neutral"
-          size="sm"
-          :aria-label="s.type"
-        />
+    <template #footer>
+      <div class="flex h-10 items-center gap-3">
+        <div v-if="speaker.socials?.length" class="flex shrink-0 gap-1">
+          <UButton
+            v-for="s in speaker.socials"
+            :key="s.link"
+            :to="s.link"
+            :icon="socialIcon(s.type)"
+            target="_blank"
+            variant="ghost"
+            color="neutral"
+            size="sm"
+            :aria-label="s.type"
+          />
+        </div>
+        <!-- Fixed height, width follows the logo's aspect ratio (capped), so wide wordmarks stay legible. -->
+        <a
+          v-if="speaker.company?.logo"
+          :href="speaker.company.link || undefined"
+          :target="speaker.company.link ? '_blank' : undefined"
+          :rel="speaker.company.link ? 'noopener' : undefined"
+          :title="speaker.company.name"
+          :aria-label="speaker.company.name"
+          class="ml-auto flex h-10 min-w-10 max-w-28 items-center justify-center rounded-md p-1.5 shadow-sm ring-1 ring-black/5"
+          :class="isWhiteLogo(speaker.company.logo) ? 'bg-gray-900' : 'bg-white dark:bg-gray-100'"
+        >
+          <img
+            :src="speaker.company.logo"
+            :alt="speaker.company.name"
+            class="h-full w-auto min-w-0 max-w-full object-contain"
+          >
+        </a>
       </div>
     </template>
   </UCard>
