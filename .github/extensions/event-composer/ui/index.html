@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>New MTG event</title>
+    <link rel="stylesheet" href="/app.css" />
+    <script type="module" src="/app.js"></script>
+  </head>
+  <body>
+    <!--
+      Direction contract (Operate mode)
+      - Scene: an MTG Bordeaux organizer in the Copilot app side panel, filling in the next meetup while
+        chatting with Copilot. Light or dark follows the host; the host's tokens are the palette.
+      - Job: get a correct event, its talks, speakers and partners into content/ in one pass, and never
+        double-book a day another community already took on La Grappe Numérique.
+      - Type: the host sans at the host body size, one step up for section headings, two for the title.
+        Monospace only for file paths, YAML and diffs.
+      - Color: host neutrals carry the page, and the primary action is the inverted neutral. Blue marks links,
+        MTG events and the chosen day; amber only same-day events from other communities, red only errors,
+        green only a free day.
+      - Layout: one column up to ~800px; the availability check sits beside the event fields when there is
+        room; a sticky action bar always says what still blocks creation.
+      - Motion: one moment. The availability verdict wipes in when the date changes; everything else is
+        instant, and reduced motion turns it off.
+    -->
+    <main id="app" aria-busy="true">
+      <p class="boot">Loading the draft…</p>
+    </main>
+    <div id="toast" class="toast" hidden></div>
+    <div id="live" class="sr-only" aria-live="polite"></div>
+    <div id="alert" class="sr-only" role="alert"></div>
+  </body>
+</html>

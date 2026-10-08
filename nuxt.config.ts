@@ -5,6 +5,10 @@ export default defineNuxtConfig({
   modules: ['@nuxt/ui', '@nuxt/content'],
   css: ['~/assets/css/main.css'],
   ssr: false,
+  experimental: {
+    // Avoid Nuxt 4.4.5's missing server-entry error in SPA development mode.
+    viteEnvironmentApi: true
+  },
   nitro: {
     preset: 'static',
     // Windows workaround for Nuxt 4.6.0: the default `nuxt/dist` inline rule misses backslash paths, which

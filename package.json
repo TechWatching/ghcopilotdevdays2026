@@ -7,6 +7,7 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
+    "test:event-composer:ui": "node .github/extensions/event-composer/tests/run-ui-smoke.mjs",
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
@@ -21,6 +22,7 @@
   "packageManager": "pnpm@12.10.1",
   "devDependencies": {
     "better-sqlite3": "^13.0.3",
+    "playwright": "1.64.0",
     "tailwindcss": "^4.3.3"
   }
 }
