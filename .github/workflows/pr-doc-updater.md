@@ -5,13 +5,15 @@ on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
 
+if: ${{ !startsWith(github.event.pull_request.title, '[docs] ') }}
+
 permissions:
   contents: read
   issues: read
   pull-requests: read
 
 tracker-id: pr-doc-updater
-engine: claude
+engine: copilot
 strict: true
 
 network:
@@ -34,12 +36,14 @@ tools:
     toolsets: [default]
   edit:
   bash:
-    - "find content -name '*.yml' -o -name '*.md'"
+    - 'find content -name "*.yml" -o -name "*.md"'
     - "find content -maxdepth 2 -ls"
-    - "cat 'content/Information about MTG.md'"
+    - 'cat "content/Information about MTG.md"'
     - "cat content/meetups/events.yml"
-    - "find content/speakers -name '*.yml' -exec cat {} +"
-    - "find content/talks -name '*.yml' -exec cat {} +"
+    - 'find content/speakers -name "*.yml"'
+    - 'cat content/speakers/*.yml'
+    - 'find content/talks -name "*.yml"'
+    - 'cat content/talks/*.yml'
     - "git"
 
 timeout-minutes: 30
