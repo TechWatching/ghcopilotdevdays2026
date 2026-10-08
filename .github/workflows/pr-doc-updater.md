@@ -40,8 +40,10 @@ tools:
     - "find content -maxdepth 2 -ls"
     - 'cat "content/Information about MTG.md"'
     - "cat content/meetups/events.yml"
-    - 'find content/speakers -name "*.yml" -exec cat {} +'
-    - 'find content/talks -name "*.yml" -exec cat {} +'
+    - 'find content/speakers -name "*.yml"'
+    - 'cat content/speakers/*.yml'
+    - 'find content/talks -name "*.yml"'
+    - 'cat content/talks/*.yml'
     - "git"
 
 timeout-minutes: 30
