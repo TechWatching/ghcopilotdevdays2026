@@ -6,7 +6,12 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
   ssr: false,
   nitro: {
-    preset: 'static'
+    preset: 'static',
+    // Windows workaround for Nuxt 4.6.0: the default `nuxt/dist` inline rule misses backslash paths, which
+    // breaks prerendering. Remove once a release containing the fix ships (nuxt/nuxt#36467).
+    externals: {
+      inline: [/[\\/]node_modules[\\/]nuxt[\\/]dist[\\/]/]
+    }
   },
   app: {
     head: {
