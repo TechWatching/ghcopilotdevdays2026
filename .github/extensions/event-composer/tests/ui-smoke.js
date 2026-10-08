@@ -1,4 +1,4 @@
-async page => {
+export default async function uiSmoke(page) {
     const assert = (ok, message) => { if (!ok) throw new Error(message); };
     const reset = () => page.evaluate(async () => {
         const response = await fetch('/api/reset', { method: 'POST', headers: {
@@ -40,17 +40,38 @@ async page => {
         await page.getByRole('button', { name: 'Add partner', exact: true }).click();
         const known = await page.evaluate(async () => {
             const state = await (await fetch('/api/state', { headers: { 'x-composer-token': new URL(location.href).searchParams.get('t') } })).json();
-            return state.catalog.companies.filter(c => c.link).slice(0, 2);
+            return state.catalog.companies.filter(c => c.link && c.logo).slice(0, 2);
         });
-        assert(known.length === 2, 'Fixture needs two catalog companies');
+        assert(known.length === 2, 'Fixture needs two linked catalog companies with logos');
         await input('partners.0.name').fill(known[0].name);
         await saved();
         assert(await input('partners.0.link').inputValue() === known[0].link, 'Partner autofill');
+        assert(await input('partners.0.logo').inputValue() === known[0].logo, 'Partner logo autofill');
+        await input('partners.0.name').fill('');
+        await input('partners.0.name').pressSequentially(known[1].name);
+        await saved();
+        assert(await input('partners.0.link').inputValue() === known[1].link, 'Replace catalog link while typing a new company');
+        assert(await input('partners.0.logo').inputValue() === known[1].logo, 'Replace catalog logo while typing a new company');
+        let previewSrc = await page.locator('.partner .image-preview img').getAttribute('src');
+        assert(new URL(previewSrc, page.url()).pathname.endsWith(`/repo${known[1].logo}`), 'Refresh company logo preview after autofill');
         await input('partners.0.link').fill('https://example.com/custom');
         await saved();
-        await input('partners.0.name').fill(known[1].name);
+        await input('partners.0.name').fill(known[0].name);
         await saved();
         assert(await input('partners.0.link').inputValue() === 'https://example.com/custom', 'Preserve custom partner link');
+        await page.getByRole('button', { name: 'Add partner', exact: true }).click();
+        await page.locator('.partner').nth(1).locator('.image-field').evaluate(zone => {
+            const data = new DataTransfer();
+            data.items.add(new File(['<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"><rect width="32" height="32" fill="#1678b7"/></svg>'], 'partner-smoke.svg', { type: 'image/svg+xml' }));
+            zone.dispatchEvent(new DragEvent('drop', { bubbles: true, dataTransfer: data }));
+        });
+        const stagedPreview = page.locator('.partner').nth(1).locator('.image-preview img');
+        await stagedPreview.waitFor();
+        const stagedSrc = await stagedPreview.getAttribute('src');
+        await input('partners.1.name').fill(known[0].name);
+        await saved();
+        assert(await page.locator('.partner').nth(1).locator('.upload-chip').count() === 1, 'Preserve staged company logo');
+        assert(await stagedPreview.getAttribute('src') === stagedSrc, 'Preserve staged company logo preview');
         await page.getByRole('button', { name: 'Add talk', exact: true }).click();
         picker = page.getByRole('combobox', { name: 'Add a speaker' }).last();
         await picker.fill('Thomas');
@@ -62,9 +83,12 @@ async page => {
         assert(await page.evaluate(() => document.activeElement.dataset.path) === 'talks.0.title', 'Reorder focus');
         await page.getByRole('button', { name: 'Remove talk 2', exact: true }).click();
         await saved();
+        await input('event.name').fill('Edited while undo was pending');
+        await saved();
         await page.getByRole('button', { name: 'Undo', exact: true }).click();
         await saved();
-        assert(await page.getByRole('combobox', { name: 'Add a speaker' }).count() === 2, 'Talk removal undo');
+        assert(await page.getByRole('combobox', { name: 'Add a speaker' }).count() === 1, 'Reject undo after a later local edit');
+        assert(await input('event.name').inputValue() === 'Edited while undo was pending', 'Keep later local edit when undo is rejected');
         await page.getByRole('button', { name: 'Go to', exact: true }).first().click();
         assert(await page.evaluate(() => document.activeElement.tabIndex) >= 0, 'Review navigation preserves tab stop');
         await page.locator('summary').filter({ hasText: 'content/meetups/events.yml' }).click();

@@ -262,6 +262,7 @@ function adoptPlan(plan, basis = S.draft) {
 }
 
 let undoGeneration = 0;
+const catalogCompanyValues = new Map();
 const cloneDraft = (draft = S.draft) => JSON.parse(JSON.stringify(draft));
 const isBlankDraft = (d) =>
     !d || (Object.values(d.event ?? {}).every((v) => v === "") && !(d.talks?.length ?? 0) && !(d.partners?.length ?? 0));
@@ -392,10 +393,11 @@ toastEl.addEventListener("focusout", () => setTimeout(releaseToast, 0));
 // Offers Undo for a change; `restore` returns false when the change can no longer be undone.
 function withUndo(text, restore, focusAfter) {
     const generation = undoGeneration;
+    const sequence = editSeq;
     toast(text, {
         action: "Undo",
         onAction: () => {
-            if (S.creating || S.expired || undoGeneration !== generation || restore() === false) {
+            if (S.creating || S.expired || undoGeneration !== generation || editSeq !== sequence || restore() === false) {
                 toast("The draft has changed since, so this can't be undone.");
                 return;
             }
@@ -512,6 +514,7 @@ function paintSave() {
 
 function adoptState(st) {
     undoGeneration++;
+    catalogCompanyValues.clear();
     S.combos.clear();
     S.rev = st.rev;
     S.draft = st.draft;
@@ -1623,10 +1626,30 @@ function autofillCompany(path, previousName) {
     const parent = path.slice(0, -5);
     const company = getAt(S.draft, parent);
     const known = (S.catalog?.companies ?? []).find((c) => nameKey(c.name) === nameKey(company.name));
-    if (!known) return;
     const previous = (S.catalog?.companies ?? []).find((c) => nameKey(c.name) === nameKey(previousName));
-    if (!company.link || (previous?.link && company.link === previous.link)) company.link = known.link || "";
-    if (!company.logoUpload && (!company.logo || (previous?.logo && company.logo === previous.logo))) company.logo = known.logo || "";
+    const key = keyPath(parent);
+    const values = catalogCompanyValues.get(key) ?? {};
+    for (const part of ["link", "logo"]) {
+        if (!values[part] && previous?.[part] && company[part] === previous[part]) values[part] = previous[part];
+        if (values[part] && company[part] !== values[part]) delete values[part];
+    }
+    if (!known) {
+        if (values.link || values.logo) catalogCompanyValues.set(key, values);
+        else catalogCompanyValues.delete(key);
+        return;
+    }
+    if (!company.link || (values.link && company.link === values.link)) {
+        company.link = known.link || "";
+        if (known.link) values.link = known.link;
+        else delete values.link;
+    }
+    if (!company.logoUpload && (!company.logo || (values.logo && company.logo === values.logo))) {
+        company.logo = known.logo || "";
+        if (known.logo) values.logo = known.logo;
+        else delete values.logo;
+    }
+    if (values.link || values.logo) catalogCompanyValues.set(key, values);
+    else catalogCompanyValues.delete(key);
 }
 
 function buildPartners() {
@@ -1800,6 +1823,15 @@ function onEdit(e) {
     if (S.uploading.has(kp)) return;
     S.localErrors.delete(kp);
     setAt(S.draft, path, value);
+    const companyField = /^(partners\.\d+)\.(link|logo)$/.exec(path)
+        ?? /^(talks\.\d+\.speakers\.\d+\.company)\.(link|logo)$/.exec(path);
+    if (companyField) {
+        const tracked = catalogCompanyValues.get(keyPath(companyField[1]));
+        if (tracked) {
+            delete tracked[companyField[2]];
+            if (!tracked.link && !tracked.logo) catalogCompanyValues.delete(keyPath(companyField[1]));
+        }
+    }
     if (path.endsWith(".photo") || path.endsWith(".logo")) {
         setAt(S.draft, `${path}Upload`, null);
         const preview = app.querySelector(`[data-image-preview="${CSS.escape(kp)}"]`);
@@ -1812,6 +1844,12 @@ function onEdit(e) {
         for (const part of ["link", "logo"]) {
             const control = byFocus(keyPath(`${parent}.${part}`));
             if (control) control.value = getAt(S.draft, `${parent}.${part}`);
+            if (part === "logo" && !getAt(S.draft, `${parent}.logoUpload`)) {
+                const logoPath = `${parent}.logo`;
+                const preview = app.querySelector(`[data-image-preview="${CSS.escape(keyPath(logoPath))}"]`);
+                const url = repoUrl(getAt(S.draft, logoPath));
+                preview?.replaceChildren(url ? h("img", { src: url, alt: "Image preview", onerror: (e) => e.target.replaceWith(icon("image")) }) : icon("image"));
+            }
         }
     }
     edited();
